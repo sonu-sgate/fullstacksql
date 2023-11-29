@@ -12,11 +12,12 @@ const query=`SELECT * FROM admin WHERE email="${email}"`
 const [data]=await connection.promise().query(query)
 // console.log(data)
 // console.log(data,"data")
+// console.log("data",data)
 if(data.length>=1){
    try{
-    bcrypt.compare(password, data.password, function(err, result) {
+    bcrypt.compare(password, data[0].password, function(err, result) {
        if(result){
-        var token = jwt.sign({ userId:data.id,role:'admin',email:data.email }, 'ms',{expiresIn:'1d'})
+        var token = jwt.sign({ userId:data[0].id,role:'admin',email:data[0].email }, 'ms',{expiresIn:'1d'})
         res.cookie("token",token)
         res.status(200).json({msg:"LOGIN SUCCESSFULLY"})
        }else{
@@ -31,18 +32,19 @@ if(data.length>=1){
 }
 // res.status(200).json({msg:data})
 })
-adminRouter.post("/adminsignin",async(req,res)=>{
+adminRouter.post("/adminsignup",async(req,res)=>{
     const {email,password}=req.body
     const query=`SELECT * FROM admin WHERE email='${email}'`
-const [singledata]=await connection.promise.query(query)
-if(data){
+const [singledata]=await connection.promise().query(query)
+console.log(singledata)
+if(singledata.length>0){
     res.status(400).json({msg:"Already Registered"})
 }else{
     bcrypt.hash(password, 5, async(err, hash)=> {
      if(hash){
        
         try{
-            const query=`INSERT INTO admin (email,password) VALUES ('${email}','${password}')`
+            const query=`INSERT INTO admin (email,password) VALUES ('${email}','${hash}')`
             connection.query(query,((error)=>{
                 if(error){
                     res.status(400).json({msg:"Error In Signup"})
