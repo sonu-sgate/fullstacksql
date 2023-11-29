@@ -14,7 +14,7 @@ export const getcatfailure=()=>{
 export const getcat=(dispatch)=>{
     dispatch(getcatrequest())
     axios.get(`${api}/adminside/getcat`).then((res)=>{
-        dispatch(getcatsuccess())
+        dispatch(getcatsuccess(res.data))
     }).catch((err)=>{
         dispatch(getcatfailure())
     })
