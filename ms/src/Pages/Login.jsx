@@ -15,10 +15,12 @@ import {
   InputRightElement,
   useToast,
 } from '@chakra-ui/react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminlogin, adminloginfailure, adminloginsuccess } from '../Redux/Authenticaton/Admin/Login/Action';
+import axios from 'axios';
 
 const initialData = {
   email: '',
@@ -39,13 +41,15 @@ export default function Login() {
   const storedlogindata=useSelector((state)=>state.adminloginreducer)
   const {amdinlogisLoading,adminlogisError}=storedlogindata
   const toast=useToast()
+const navigate=useNavigate()
+  axios.defaults.withCredentials=true
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log(loginData, 'loginData');
     dispatch(adminlogin(loginData)).then((res)=>{
         dispatch(adminloginsuccess())
         toast({"title":"success",status:"success",position:"top",duration:3000,description:res.data.msg})
-
+navigate("/dashboard")
     }).catch((err)=>{
         dispatch(adminloginfailure())
         toast({"title":"error",status:"error","position":'top',duration:3000,description:err.response.data.msg})
@@ -107,6 +111,7 @@ export default function Login() {
                   Sign in
                 </Button>
               </Stack>
+              <Link to="/adminsignup">Not a Registered User? <Button>Click Here!</Button></Link>
             </Stack>
           </Box>
         </form>
