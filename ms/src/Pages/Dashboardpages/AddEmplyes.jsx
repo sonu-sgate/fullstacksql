@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -17,8 +17,10 @@ import {
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { PlusSquareIcon } from '@chakra-ui/icons';
-import { useDispatch } from 'react-redux';
-import { addemp } from '../../Redux/Admin/Employee/AddEmployee/Action';
+import { useDispatch, useSelector } from 'react-redux';
+import { addemp, addempsuccess } from '../../Redux/Admin/Employee/AddEmployee/Action';
+import { addcatfailure } from '../../Redux/Admin/AddCategory/Action';
+import { getcat } from '../../Redux/Admin/GetCat/Action';
 
 
 const MotionBox = motion(Box);
@@ -29,13 +31,13 @@ const Addemployee = () => {
       name: '',
       email: '',
       password: '',
-      category: '',
+   
       salary: '',
-      image: '',
+   
       address: '',
       category_id:""
     });
-  
+  const [image,setImage]=useState("")
     const handleOpenModal = () => {
       setIsModalOpen(true);
     };
@@ -46,9 +48,9 @@ const Addemployee = () => {
         name: '',
         email: '',
         password: '',
-        category: '',
+     
         salary: '',
-        image: '',
+     
         address: '',
         category_id:""
       });
@@ -60,16 +62,22 @@ const Addemployee = () => {
     const {name,value}=e.target
     setFormData((pre)=>({...pre,[name]:value}))
   }
-    const handleAddCategory = () => {
-      const { name, email, password, category, salary, image, address } = formData;
-  
-      if (name && email && password && category && salary && image && address) {
-        dispatch(addemp({ name, email, password, category, salary, image, address,category_id }))
+  const storedempdata=useSelector((state)=>state.addempreducer)
+  const {addempisLoading,addempisError}=storedempdata
+ 
+    const handleaddemp = (e) => {
+        e.preventDefault()
+      const { name, email, password, salary, address,category_id } = formData;
+//   console.log(formData)
+console.log(formData)
+console.log("image",image)
+      if (name && email && password && salary && image && address&&category_id) {
+        dispatch(addemp({ name, email, password, salary, image, address,category_id,image }))
           .then((res) => {
-            dispatch(addcatsuccess());
+            dispatch(addempsuccess());
             toast({ description: res.data.msg, status: 'success', position: 'top', duration: 3000 });
-            handleCloseModal();
-            onAdd(); // Callback to trigger any additional action upon successful category addition
+            // handleCloseModal();
+            // onAdd(); // Callback to trigger any additional action upon successful category addition
           })
           .catch((err) => {
             dispatch(addcatfailure());
@@ -79,7 +87,13 @@ const Addemployee = () => {
         toast({ description: 'Please fill in all fields', position: 'top', duration: 3000, status: 'error' });
       }
     };
-  
+    const storedcatdata=useSelector((state)=>state.getcatreducer)
+    const {result}=storedcatdata
+
+    useEffect(()=>{
+    dispatch(getcat)
+    },[])
+    console.log(result,"result")
     return (
       <>
         <Button onClick={handleOpenModal}>
@@ -88,21 +102,24 @@ const Addemployee = () => {
         </Button>
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
           <ModalOverlay />
-          <ModalContent>
+          <form onSubmit={handleaddemp}> <ModalContent>
             <ModalHeader>Add Employee</ModalHeader>
             <ModalCloseButton />
+          
             <ModalBody>
               <Box mb={4}>
                 <Input
                   placeholder="Name"
                   value={formData.name}
                   onChange={handlechange}
+                  name="name"
                 />
               </Box>
               <Box mb={4}>
                 <Input
                   placeholder="Email"
                   type="email"
+                  name="email"
                   value={formData.email}
                   onChange={handlechange}
                 />
@@ -112,6 +129,7 @@ const Addemployee = () => {
                   placeholder="Password"
                   type="password"
                   value={formData.password}
+                  name="password"
                   onChange={handlechange}
                 />
               </Box>
@@ -119,25 +137,30 @@ const Addemployee = () => {
                 <Select
                   placeholder="Category"
                   value={formData.category}
+                  name="category_id"
                   onChange={handlechange}
                 >
-                  <option value="frontend">Frontend</option>
-                  <option value="backend">Backend</option>
-                  <option value="fullstack">Fullstack</option>
+                    {result&&result.map((item,index)=>
+                      <option value={item.id} key={index}>{item.name}</option>
+              
+                    )}
+                
                 </Select>
               </Box>
-              <Box mb={4}>
+              {/* <Box mb={4}>
                 <Input
                   placeholder="category_id"
                   type="number"
                   value={formData.category_id}
+                  name="category_id"
                   onChange={handlechange}
                 />
-              </Box>
+              </Box> */}
               <Box mb={4}>
                 <Input
                   placeholder="Salary"
                   type="number"
+                  name="salary"
                   value={formData.salary}
                   onChange={handlechange}
                 />
@@ -146,25 +169,27 @@ const Addemployee = () => {
                 <Input
                   placeholder="Image URL"
                   type="file"
-                  value={formData.image}
-                  onChange={handlechange}
+                  name="image"
+                //   value={formData.image}
+                  onChange={(e)=>setImage(e.target.files[0])}
                 />
               </Box>
               <Box mb={4}>
                 <Textarea
                   placeholder="Address"
+                  name="address"
                   value={formData.address}
                   onChange={handlechange}
                 />
               </Box>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={handleaddemp}>
+              <Button colorScheme="blue" mr={3} type="submit">
                 Add
               </Button>
               <Button onClick={handleCloseModal}>Cancel</Button>
             </ModalFooter>
-          </ModalContent>
+          </ModalContent></form>
         </Modal>
       </>
     );

@@ -11,6 +11,7 @@ export const addempsuccess=()=>{
 export const addempfailure=()=>{
     return {type:addempfail}
 }
-export const addemp=(obj)=>{
+export const addemp=(obj)=>(dispatch)=>{
+    dispatch(addemprequest())
     return axios.post(`${api}/adminside/addemployee`,obj)
 }
