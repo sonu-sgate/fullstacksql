@@ -38,59 +38,53 @@ res.status(200).json({msg:data})
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-     cb(null, 'public/Images')
+      cb(null, 'Public/Images'); // Set your destination folder
     },
     filename: function (req, file, cb) {
-    
-   cb(null, file.fieldname + '-' +Date.now()+path.extname(file.originalname))
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    },
+  });
+  
+  const upload = multer({ storage: storage });
+  
+  
+  adminactivityRouter.post("/addemployee", upload.single('image'), async (req, res) => {
+    try {
+      const { name, email, password, category_id, address, salary} = req.body;
+  
+      // Check if the email already exists
+      const [result] = await connection.promise().query("SELECT * FROM employ WHERE email=?", [email]);
+      if (result.length > 0) {
+        return res.status(400).json({ msg: "Employee is already present" });
+      }
+  
+      // Hash the password
+      bcrypt.hash(password, 5, function (err, hash) {
+        if (err) {
+          console.log(err);
+          return res.status(400).json({ msg: "Error in hashing password" });
+        }
+  
+        // Construct the SQL query using placeholders to prevent SQL injection
+        const query = `INSERT INTO employ (name, email, password, salary, address, category_id, image)
+                       VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        const values = [name, email, hash, +salary, address, category_id,req.file.filename];
+  
+        // Execute the query
+        connection.query(query, values, (error) => {
+          if (error) {
+            console.log(error);
+            return res.status(400).json({ msg: "Something went wrong" });
+          } else {
+            return res.status(200).json({ msg: "Employee added successfully" });
+          }
+        });
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ msg: "Internal server error" });
     }
-  })
+  });
   
-  const upload = multer({ dest: 'uploads/' })
-  
-adminactivityRouter.post("/addemployee",upload.single('profileimage'),async(req,res)=>{
-    // console.log(upload,"upload")
-    const {name,email,password,category_id,address,image,salary}=req.body
-  
-const [result]=await connection.promise().query("SELECT * FROM employ WHERE email=?",[email])
-if(result.length>0){
-    res.status(400).json({msg:"Employee is already present"})
-}else{
-
-
-try{
-    
-   
-            
-            bcrypt.hash(password, 5, function(err, hash) {
-                // console.log(hash)
-                if(hash){
-                    const query=`INSERT INTO employ (name,email,password,salary,address,category_id,image)
-            VALUES ( '${name}','${email}' ,'${password}' ,'${+salary}' ,'${address}','${category_id}','${req.file}')`
-        
-            connection.query(query,((error)=>{
-                if(error){
-                    // console.log(error)
-                    res.status(400).json({msg:"Something going wrong"})
-                }else{
-
-                    res.status(200).json({msg:"Employee Added Successfully"})
-                }}))
-          
-            // res.status(200).json({msg:"Empoyee Added Successfully"})
-        }else{
-            console.log(error)
-            res.status(400).json({msg:"Error In adding employ"})
-          
-        
-        }})
-}catch(err){
-    res.status(400).json({msg:"something going wrong"})
-}}
-
-
-    })
-
-
 
 module.exports={adminactivityRouter}
