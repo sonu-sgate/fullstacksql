@@ -13,6 +13,7 @@ app.use(express.json())
 
 app.use("/auth",adminRouter)
 app.use("/adminside",adminactivityRouter)
+app.use(express.static('public'))
 app.listen(3000,async(req,res)=>{
     try{
         connection.connect((error)=>{

@@ -13,5 +13,6 @@ export const addempfailure=()=>{
 }
 export const addemp=(obj)=>(dispatch)=>{
     dispatch(addemprequest())
-    return axios.post(`${api}/adminside/addemployee`,obj)
+    return axios.post(`${api}/adminside/addemployee`,obj, 
+       )
 }

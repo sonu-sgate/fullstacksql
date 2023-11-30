@@ -54,6 +54,7 @@ const Addemployee = () => {
         address: '',
         category_id:""
       });
+      setImage("")
     };
   
     const toast = useToast();
@@ -68,11 +69,19 @@ const Addemployee = () => {
     const handleaddemp = (e) => {
         e.preventDefault()
       const { name, email, password, salary, address,category_id } = formData;
-//   console.log(formData)
-console.log(formData)
-console.log("image",image)
+  
+      const newFormData = new FormData();
+      newFormData.append('name', name);
+      newFormData.append('email', email);
+      newFormData.append('password', password);
+      newFormData.append('address', address);
+      newFormData.append('salary', salary);
+      newFormData.append('category_id', category_id);
+      newFormData.append('image', image); 
+//   console.log([...newFormData,"newformdata"])
+
       if (name && email && password && salary && image && address&&category_id) {
-        dispatch(addemp({ name, email, password, salary, image, address,category_id,image }))
+        dispatch(addemp(formData))
           .then((res) => {
             dispatch(addempsuccess());
             toast({ description: res.data.msg, status: 'success', position: 'top', duration: 3000 });
@@ -102,7 +111,7 @@ console.log("image",image)
         </Button>
         <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
           <ModalOverlay />
-          <form onSubmit={handleaddemp}> <ModalContent>
+          <form onSubmit={handleaddemp} encType="multipart/form-data"> <ModalContent>
             <ModalHeader>Add Employee</ModalHeader>
             <ModalCloseButton />
           
@@ -169,7 +178,7 @@ console.log("image",image)
                 <Input
                   placeholder="Image URL"
                   type="file"
-                  name="image"
+                  name="profileimage"
                 //   value={formData.image}
                   onChange={(e)=>setImage(e.target.files[0])}
                 />
