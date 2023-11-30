@@ -47,7 +47,7 @@ const handleSubmit=(e)=>{
 dispatch(adminsignup(signupdata)).then((res)=>{
     dispatch(adminsignupsuccess())
     toast({description:res.data.msg,'position':"top",status:"success",duration:3000})
-    navigate("/login")
+    navigate("/adminlogin")
 }).catch((error)=>{
     dispatch(adminsignupfailure())
     toast({description:error.response.data.msg,position:'top',status:"error",duration:3000})

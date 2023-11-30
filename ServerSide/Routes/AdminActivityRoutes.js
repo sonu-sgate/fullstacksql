@@ -18,8 +18,9 @@ adminactivityRouter.post("/addcat",async(req,res)=>{
         res.status(400).json({msg:"Error in adding Category"})
     }
 })
-adminRouter.get("/getcat",async(req,res)=>{
+adminactivityRouter.get("/getcat",async(req,res)=>{
     const query="SELECT * FROM category"
+    console.log("ihi")
     try{
 const [data]=await connection.promise().query(query)
 console.log(data)
@@ -28,4 +29,15 @@ res.status(200).json({msg:data})
         res.status(400).json({msg:"Something going wrong"})
     }
 })
+adminactivityRouter.post("/addemployee",async(req,res)=>{
+    const {name,email,password,category,category_id,address,image,salary}=req.body
+    const query=`INSERT INTO employee (name,email,password,salary,address,category,category_id,image)
+     VALUES ( '${name}','${email}' ,'${password}' ,'${salary}' ,'${address}' ,'${category}','${category_id}','${image}')`
+console.log(query)
+
+
+    })
+
+
+
 module.exports={adminactivityRouter}

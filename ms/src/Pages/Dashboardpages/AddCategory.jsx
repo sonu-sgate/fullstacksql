@@ -21,7 +21,7 @@ import { addcat, addcatfailure, addcatsuccess } from '../../Redux/Admin/AddCateg
 
 const MotionBox = motion(Box);
 
-const AddCategory = () => {
+const AddCategory = ({refonadd}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryName, setCategoryName] = useState('');
 
@@ -44,6 +44,7 @@ dispatch(addcat({"name":categoryName})).then((res)=>{
     dispatch(addcatsuccess())
     toast({description:res.data.msg,status:"success",position:'top',duration:3000})
     handleCloseModal()
+    refonadd()
 }).catch((err)=>{
     dispatch(addcatfailure())
     toast({description:err.response.data.msg,status:"error",position:'top',duration:3000})
