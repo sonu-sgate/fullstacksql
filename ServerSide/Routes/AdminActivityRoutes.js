@@ -9,7 +9,7 @@ const adminactivityRouter=express.Router()
 
 adminactivityRouter.post("/addcat",async(req,res)=>{
     const {name}=req.body
-    const query=`INSERT INTO category (name) VALUES ('${name}')`
+    const query=`INSERT INTO category (categoryname) VALUES ('${name}')`
     try{
         connection.query(query,((error)=>{
             if(error){
@@ -101,13 +101,40 @@ res.status(200).json({msg:data})
 })
 adminactivityRouter.get("/getsingleemp/:id",async(req,res)=>{
   const {id}=req.params
+  console.log(id)
   // console.log(id)
+  const [joindata]=await connection.promise().query(
+    "SELECT * FROM employ INNER JOIN category ON employ.category_id=category.id"
+  )
+  // console.log(joindata,"joindata")
   const query=`SELECT * FROM employ WHERE id=${id}`
   try{
 const [data]=await connection.promise().query(query)
+console.log(data,"")
 res.status(200).json({msg:data})
   }catch(err){
     res.status(400).json({msg:"something going wrong "})
   }
+})
+adminactivityRouter.get("/getcount",async(req,res)=>{
+  // console.log("HII")
+const query='SELECT count(id) FROM admin'
+const query2='SELECT count(id) FROM employ'
+const query3='SELECT * FROM admin'
+// console.log("Hii")
+try{
+  const [admins]=await connection.promise().query(query3)
+  console.log(admins,"admins")
+  const [admincount]=await connection.promise().query(query)
+  const [empcount]=await connection.promise().query(query2)
+  // console.log(admincount,empcount)
+  // console.log(admincount[0]['count(id)'],"ad")
+  // console.log(admincount[0]['count(id)'],empcount[0]['count(id)'],
+  // +(empcount[0]['count(id)'])+(+admincount[0]['count(id)']))
+  res.status(200).json({admincount:admincount[0]['count(id)'],empcount:empcount[0]['count(id)'],total:
++(empcount[0]['count(id)'])+(+admincount[0]['count(id)']),admins})
+}catch(err){
+  res.status(400).json({msg:"something going wrong"})
+}
 })
 module.exports={adminactivityRouter}
