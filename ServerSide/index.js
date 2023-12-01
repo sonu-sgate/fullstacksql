@@ -3,6 +3,8 @@ const cors=require("cors")
 const { connection } = require('./Connection/connection')
 const { adminRouter } = require('./Routes/Amdinroutes')
 const { adminactivityRouter } = require('./Routes/AdminActivityRoutes')
+const { auth } = require('./Middleware/Auth')
+const cookieParser = require('cookie-parser');
 const app=express()
 app.use(cors({
     origin:["http://localhost:5173"],
@@ -13,7 +15,11 @@ app.use(express.json())
 
 app.use("/auth",adminRouter)
 // importent to get static data(images)
+app.use(cookieParser());
+
+app.use(auth)
 app.use(express.static('Public'))
+
 app.use("/adminside",adminactivityRouter)
 
 
