@@ -137,4 +137,12 @@ try{
   res.status(400).json({msg:"something going wrong"})
 }
 })
+adminactivityRouter.get("/adminlogout",async(req,res)=>{
+  try{
+res.clearCookie("token")
+res.status(200).json({msg:"Logout Successfully"})
+  }catch(err){
+    res.status(400).json({msg:"failed to logout"})
+  }
+})
 module.exports={adminactivityRouter}
