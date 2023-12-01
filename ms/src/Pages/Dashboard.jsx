@@ -15,6 +15,7 @@ import {
   InputGroup,
   InputLeftElement,
   Avatar,
+  useToast,
 } from '@chakra-ui/react';
 
 import {
@@ -38,11 +39,15 @@ import {
 import { MdCategory, MdEmojiPeople, MdHome, MdKeyboardArrowRight } from 'react-icons/md';
 import { BsGearFill } from 'react-icons/bs';
 import { AiFillProfile } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Home from './Dashboardpages/Home';
 import Employee from './Dashboardpages/Employee';
 import Category from './Dashboardpages/Category';
 import Profile from './Dashboardpages/Profile';
+import EmpSingle from './Dashboardpages/EmpSingle';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { adminlogout, adminlogoutfailure, adminlogoutsuccess } from '../Redux/Admin/Logout/Action';
 
 // Assume Logo is another component you've defined elsewhere
 const Logo = () => (
@@ -55,8 +60,26 @@ const Logo = () => (
 
 const Dashboard = () => {
   const sidebar = useDisclosure();
+  const {id}=useParams()
   const integrations = useDisclosure();
   const color = useColorModeValue("gray.600", "gray.300");
+const locaton=useLocation()
+const dispatch=useDispatch()
+const logoutstoreddata=useSelector((state)=>state.amdinlogoutreducer)
+const {adminisLoading,adminisError}=logoutstoreddata
+const navigate=useNavigate()
+const toast=useToast()
+axios.defaults.withCredentials=true
+const handlelogout=()=>{
+dispatch(adminlogout).then((res)=>{
+  dispatch(adminlogoutsuccess())
+toast({description:"Logout Successfully",position:"top",status:"success",duration:3000})
+navigate("/adminlogin")
+}).catch((err)=>{
+  toast({description:"failed to Logout",position:"top",status:"error",duration:3000})
+  dispatch(adminlogoutfailure())
+})
+}
 
   const NavItem = (props) => {
     const { icon, children, ...rest } = props;
@@ -146,7 +169,7 @@ const Dashboard = () => {
 
         <NavItem icon={AiFillProfile}><Link to="/dashboard/profile">Profile</Link></NavItem>
       
-        <NavItem icon={FiLogOut}>LogOut</NavItem>
+        <NavItem onClick={handlelogout} icon={FiLogOut}>LogOut</NavItem>
       
       </Flex>
     </Box>
@@ -186,6 +209,9 @@ const Dashboard = () => {
       >
         <Flex
           as="header"
+          position={"sticky"}
+          zIndex={100}
+          top={0}
           align="center"
           justify="space-between"
           w="full"
@@ -240,7 +266,10 @@ const Dashboard = () => {
 
           {/* <Box borderWidth="4px" borderStyle="dashed" rounded="md" h="96" /> */}
           {location.pathname=="/dashboard"?<Home/>:location.pathname=="/dashboard/employee"?<Employee/>:
-          location.pathname=="/dashboard/category"?<Category/>:location.pathname=="/dashboard/profile"?<Profile/>:""}
+          location.pathname=="/dashboard/category"?<Category/>:location.pathname=="/dashboard/profile"?<Profile/>:
+          location.pathname==`/dashboard/employee/${id}`?<EmpSingle/>:""}
+          {/* <EmpSingle/>
+          {location.pathname=="/dashboard/employee/:id"&&<EmpSingle/>} */}
         </Box>
       </Box>
     </Box>

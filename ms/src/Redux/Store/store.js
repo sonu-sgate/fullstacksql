@@ -8,5 +8,10 @@ import { adminsignupreducer } from "../Authenticaton/Admin/Signup/Reducer";
 import { addcatreducer } from "../Admin/AddCategory/Reducer";
 import { getcatreducer } from "../Admin/GetCat/Reducer";
 import { addempreducer } from "../Admin/Employee/AddEmployee/Reducer";
-const rootreducers=combineReducers({adminloginreducer,adminsignupreducer,addcatreducer,getcatreducer,addempreducer})
+import { getempreducer } from "../Admin/Employee/GetEmployee/Reducer";
+import { getsingleempreducer } from "../Admin/Employee/GetSingle/Reducer";
+import { getcountreducer } from "../Admin/GetCounts/Reducer";
+import { amdinlogoutreducer } from "../Admin/Logout/Reducer";
+const rootreducers=combineReducers({adminloginreducer,adminsignupreducer,addcatreducer,getcatreducer,
+    addempreducer,getempreducer,getsingleempreducer,getcountreducer,amdinlogoutreducer})
 export const store=legacy_createStore(rootreducers,applyMiddleware(thunk))

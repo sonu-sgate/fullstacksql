@@ -23,7 +23,7 @@ import { getcat } from '../../Redux/Admin/GetCat/Action';
 
 const MotionBox = motion(Box);
 
-const Addemployee = () => {
+const Addemployee = ({handleempreq}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -80,6 +80,8 @@ const Addemployee = () => {
         .then((res) => {
           dispatch(addempsuccess());
           toast({ description: res.data.msg, status: 'success', position: 'top', duration: 3000 });
+          handleCloseModal()
+          handleempreq()
         })
         .catch((err) => {
           dispatch(addcatfailure());

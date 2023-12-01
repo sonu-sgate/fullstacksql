@@ -46,7 +46,9 @@ const navigate=useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log(loginData, 'loginData');
+    console.log(loginData)
     dispatch(adminlogin(loginData)).then((res)=>{
+      console.log(res)
         dispatch(adminloginsuccess())
         toast({"title":"success",status:"success",position:"top",duration:3000,description:res.data.msg})
 navigate("/dashboard")
@@ -111,7 +113,7 @@ navigate("/dashboard")
                   Sign in
                 </Button>
               </Stack>
-              <Link to="/adminsignup">Not a Registered User? <Button>Click Here!</Button></Link>
+              {/* <Link to="/adminsignup">Not a Registered User? <Button>Click Here!</Button></Link> */}
             </Stack>
           </Box>
         </form>
