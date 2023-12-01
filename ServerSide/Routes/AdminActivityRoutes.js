@@ -51,7 +51,7 @@ const storage = multer.diskStorage({
   adminactivityRouter.post("/addemployee", upload.single('image'), async (req, res) => {
     try {
       const { name, email, password, category_id, address, salary} = req.body;
-  
+  console.log(req.file,"imageurl")
       // Check if the email already exists
       const [result] = await connection.promise().query("SELECT * FROM employ WHERE email=?", [email]);
       if (result.length > 0) {
@@ -73,7 +73,7 @@ const storage = multer.diskStorage({
         // Execute the query
         connection.query(query, values, (error) => {
           if (error) {
-            console.log(error);
+            // console.log(error);
             return res.status(400).json({ msg: "Something went wrong" });
           } else {
             return res.status(200).json({ msg: "Employee added successfully" });
@@ -81,10 +81,22 @@ const storage = multer.diskStorage({
         });
       });
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       return res.status(500).json({ msg: "Internal server error" });
     }
   });
   
+// Getting employees......................
 
+adminactivityRouter.get("/getemp",async(req,res)=>{
+  const query="SELECT * FROM employ"
+
+  try{
+const [data]=await connection.promise().query(query)
+
+res.status(200).json({msg:data})
+  }catch(err){
+    res.status(400).json({msg:"something going wrong"})
+  }
+})
 module.exports={adminactivityRouter}
