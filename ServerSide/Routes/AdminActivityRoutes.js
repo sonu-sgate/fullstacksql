@@ -99,4 +99,15 @@ res.status(200).json({msg:data})
     res.status(400).json({msg:"something going wrong"})
   }
 })
+adminactivityRouter.get("/getsingleemp/:id",async(req,res)=>{
+  const {id}=req.params
+  // console.log(id)
+  const query=`SELECT * FROM employ WHERE id=${id}`
+  try{
+const [data]=await connection.promise().query(query)
+res.status(200).json({msg:data})
+  }catch(err){
+    res.status(400).json({msg:"something going wrong "})
+  }
+})
 module.exports={adminactivityRouter}
