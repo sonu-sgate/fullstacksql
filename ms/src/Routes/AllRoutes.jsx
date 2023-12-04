@@ -12,6 +12,10 @@ import EmpSingle from '../Pages/Dashboardpages/EmpSingle'
 
 import EmpNavbar from '../Pages/EmploySide/empHome/EmpNavbar'
 import ProfileCard from '../Pages/EmploySide/empHome/EmpDetails'
+import EmpPrivateRoute from './Priavateroutes/EmpPrivateRoute'
+import AdminPrivateRoute from './Priavateroutes/AdminPrivateRoute'
+import AboutUsPage from '../Pages/EmploySide/empHome/AboutUs'
+import LearnMorePage from '../Pages/EmploySide/empHome/LearnMore'
 export default function AllRoutes() {
     const location=useLocation()
   return (
@@ -23,11 +27,12 @@ export default function AllRoutes() {
         {/* <Route path={"/"} element={<Login/>}/> */}
         <Route path="/adminlogin" element={<Login/>}/>
         <Route path="/adminsignup" element={<SignUp/>}/>
-        <Route path="/dashboard" element={<Dashboard/>}>
-<Route path="/dashboard/employee" element={<Dashboard/>}/>
-<Route path="/dashboard/category" element={<Dashboard/>}/>
-<Route path="/dashboard/profile" element={<Dashboard/>}/>
+        <Route path="/dashboard" element={<AdminPrivateRoute><Dashboard/></AdminPrivateRoute>}>
+<Route path="/dashboard/employee" element={<AdminPrivateRoute><Dashboard/></AdminPrivateRoute>}/>
+<Route path="/dashboard/category" element={<AdminPrivateRoute><Dashboard/></AdminPrivateRoute>}/>
+<Route path="/dashboard/profile" element={<AdminPrivateRoute><Dashboard/></AdminPrivateRoute>}/>
 <Route path="/dashboard/employee/:id" element={<Dashboard/>}/>
+
 {/* <Route path="/dashboard/employee" element={<Employee/>}/>
 <Route path="/dashboard/category" element={<Category/>}/>
 <Route path="/dashboard/profile" element={<Profile/>}/> */}
@@ -38,9 +43,9 @@ export default function AllRoutes() {
         {/* <Route path="/" */}
 
         {/* empside................................... */}
-        <Route path="/employee" element={<ProfileCard/>}/>
-   
-
+        <Route path="/employee" element={<EmpPrivateRoute><ProfileCard/></EmpPrivateRoute>}/>
+   <Route path="/learnmore" element={<LearnMorePage/>}/>
+<Route path="/about" element={<AboutUsPage/>}/>
 
       </Routes>
 

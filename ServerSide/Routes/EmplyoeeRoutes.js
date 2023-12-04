@@ -20,8 +20,12 @@ empRouter.post("/login",async(req,res)=>{
              if(result){
                 var token = jwt.sign({ userId:empdata[0].id,role:"employee",email:empdata[0].email }, 'ms');
                 // console.log(token)
+                res.cookie("token",token)
                 res.status(200).json({msg:"Login Successfully",empdetails:joindata[0],token,role:"employee"})
-             }else{
+      
+          
+          
+            }else{
                 res.status(400).json({msg:"Wrong Password"})
              }
             });

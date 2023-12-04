@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Flex, Box, Image, Text, HStack, Center, Heading } from '@chakra-ui/react';
 import { FaSuitcase, FaMapPin, FaEnvelope } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { api } from '../../../Redux/Api/api';
 import { MdLocationCity } from 'react-icons/md';
-
+import { empprofile } from '../../../Redux/Authenticaton/Employee/empProfile/Action';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 const ProfileCard = () => {
-    const {profile}=useSelector((state)=>state.emploginreducer)
-    console.log(profile,"userprofile")
+    const profiledata=useSelector((state)=>state.empprofilereducer)
+    // console.log(profile,"userprofile")
+    // const token=  Cookies.get('token');
+    // console.log(token,"token")
+    const dispatch=useDispatch()
+    const {profile,profileisLoading,prfileisError}=profiledata
+    axios.defaults.withCredentials=true
+    useEffect(()=>{
+dispatch(empprofile)
+    },[])
+    // console.log(profile,"profile")
 if(profile){
 
 

@@ -7,6 +7,7 @@ const { auth } = require('./Middleware/Auth')
 const cookieParser = require('cookie-parser');
 const { empRouter } = require('./Routes/EmplyoeeRoutes')
 const { empActivityrouter } = require('./Routes/EmpActivityRouter')
+const { empauth } = require('./Middleware/Empauth')
 const app=express()
 app.use(cors({
     origin:["http://localhost:5173"],
@@ -24,7 +25,7 @@ app.use(express.static('Public'))
 
 app.use("/adminside",auth,adminactivityRouter)
 app.use("/empside",empRouter)
-app.use('/empactivity',empActivityrouter)
+app.use('/empactivity',empauth,  empActivityrouter)
 app.listen(3000,async(req,res)=>{
     try{
         connection.connect((error)=>{

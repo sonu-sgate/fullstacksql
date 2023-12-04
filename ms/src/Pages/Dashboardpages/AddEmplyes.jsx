@@ -133,7 +133,7 @@ const Addemployee = ({handleempreq}) => {
                   {result &&
                     result.map((item, index) => (
                       <option value={item.id} key={index}>
-                        {item.name}
+                        {item.categoryname}
                       </option>
                     ))}
                 </Select>
