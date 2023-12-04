@@ -31,9 +31,11 @@ export default function AllRoutes() {
 
 
         </Route>
-        <Route path="/employlogin" element={<EmpHome/>}  />
+        <Route path="/employlogin" element={<Login/>}  />
+        {/* <Route path="/" */}
         {/* <Route path="/details/:id" element={<EmpSingle/>}/> */}
       </Routes>
+      
     </>
   )
 }

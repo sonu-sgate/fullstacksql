@@ -11,6 +11,13 @@ export const adminloginfailure=()=>{
     return {type:adminloginfail}
 }
 export const adminlogin=(obj)=>(dispatch)=>{
+    // console.log(obj)
+    let {location}=obj
+    console.log(location,"actionlocation")
     dispatch(adminloginrequest())
-    return axios.post(`${api}/auth/adminlogin`,obj)
+    if(location=="/adminlogin"){
+    return axios.post(`${api}/auth/adminlogin`,obj)}
+   if(location=="/employlogin"){
+        return axios.post(`${api}/empside/login`,obj)
+    }
 }

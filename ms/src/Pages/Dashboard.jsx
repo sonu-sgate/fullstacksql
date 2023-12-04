@@ -74,7 +74,7 @@ const handlelogout=()=>{
 dispatch(adminlogout).then((res)=>{
   dispatch(adminlogoutsuccess())
 toast({description:"Logout Successfully",position:"top",status:"success",duration:3000})
-navigate("/adminlogin")
+navigate("/")
 }).catch((err)=>{
   toast({description:"failed to Logout",position:"top",status:"error",duration:3000})
   dispatch(adminlogoutfailure())

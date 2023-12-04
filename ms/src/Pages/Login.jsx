@@ -15,7 +15,7 @@ import {
   InputRightElement,
   useToast,
 } from '@chakra-ui/react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,17 +41,27 @@ export default function Login() {
   const storedlogindata=useSelector((state)=>state.adminloginreducer)
   const {amdinlogisLoading,adminlogisError}=storedlogindata
   const toast=useToast()
+  const location=useLocation()
 const navigate=useNavigate()
   axios.defaults.withCredentials=true
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log(loginData, 'loginData');
-    console.log(loginData)
-    dispatch(adminlogin(loginData)).then((res)=>{
-      console.log(res)
+    console.log(location.pathname,"pathname")
+    // console.log(loginData)
+    let newdata={...loginData,location:location.pathname}
+    dispatch(adminlogin(newdata)).then((res)=>{
+      // console.log(res)
         dispatch(adminloginsuccess())
         toast({"title":"success",status:"success",position:"top",duration:3000,description:res.data.msg})
-navigate("/dashboard")
+console.log(res.data.role)
+        if(res.data.role=="admin"){
+  navigate("/dashboard")
+}
+if(res.data.role=="employee"){
+  navigate("/employee")
+}
+        // navigate("/dashboard")
     }).catch((err)=>{
         dispatch(adminloginfailure())
         toast({"title":"error",status:"error","position":'top',duration:3000,description:err.response.data.msg})

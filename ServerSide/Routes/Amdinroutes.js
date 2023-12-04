@@ -19,7 +19,7 @@ if(data.length>=1){
        if(result){
         var token = jwt.sign({ userId:data[0].id,role:'admin',email:data[0].email }, 'ms',{expiresIn:'1d'})
         res.cookie("token",token)
-        res.status(200).json({msg:"LOGIN SUCCESSFULLY"})
+        res.status(200).json({msg:"LOGIN SUCCESSFULLY",role:"admin"})
        }else{
         res.status(400).json({msg:"Password Mismatch"})
        }

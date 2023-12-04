@@ -5,6 +5,7 @@ const { adminRouter } = require('./Routes/Amdinroutes')
 const { adminactivityRouter } = require('./Routes/AdminActivityRoutes')
 const { auth } = require('./Middleware/Auth')
 const cookieParser = require('cookie-parser');
+const { empRouter } = require('./Routes/EmplyoeeRoutes')
 const app=express()
 app.use(cors({
     origin:["http://localhost:5173"],
@@ -17,11 +18,11 @@ app.use("/auth",adminRouter)
 // importent to get static data(images)
 app.use(cookieParser());
 
-app.use(auth)
+
 app.use(express.static('Public'))
 
-app.use("/adminside",adminactivityRouter)
-
+app.use("/adminside",auth,adminactivityRouter)
+app.use("/empside",empRouter)
 
 app.listen(3000,async(req,res)=>{
     try{
