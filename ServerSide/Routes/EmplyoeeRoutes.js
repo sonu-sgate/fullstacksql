@@ -12,6 +12,7 @@ empRouter.post("/login",async(req,res)=>{
     category ON employ.category_id=category.id WHERE email='${email}'`)
     // console.log(joindata)
     // console.log(empdata,"empdata")
+    // console.log(empdata,"emproute")
 // console.log(empdata[0].password)
     try{
         if(empdata.length>0){

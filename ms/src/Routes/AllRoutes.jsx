@@ -16,13 +16,14 @@ import EmpPrivateRoute from './Priavateroutes/EmpPrivateRoute'
 import AdminPrivateRoute from './Priavateroutes/AdminPrivateRoute'
 import AboutUsPage from '../Pages/EmploySide/empHome/AboutUs'
 import LearnMorePage from '../Pages/EmploySide/empHome/LearnMore'
+import ReportForm from '../Pages/EmploySide/empHome/Report'
 export default function AllRoutes() {
     const location=useLocation()
   return (
     <>
      {location.pathname!=="/dashboard"&&location.path=="/employee"&&location.pathname=="/category"
      &&location.pathname=="/profile"&& <Navbar/>}
-     {location.pathname=="/employee"&&<EmpNavbar/>}
+     {location.pathname=="/employee"?<EmpNavbar/>:location.pathname=="/report"?<EmpNavbar/>:""}
       <Routes>
         {/* <Route path={"/"} element={<Login/>}/> */}
         <Route path="/adminlogin" element={<Login/>}/>
@@ -46,6 +47,7 @@ export default function AllRoutes() {
         <Route path="/employee" element={<EmpPrivateRoute><ProfileCard/></EmpPrivateRoute>}/>
    <Route path="/learnmore" element={<LearnMorePage/>}/>
 <Route path="/about" element={<AboutUsPage/>}/>
+<Route path="/report" element={<EmpPrivateRoute><ReportForm/></EmpPrivateRoute>}/>
 
       </Routes>
 

@@ -14,7 +14,7 @@ export const empprofilefailure=()=>{
 export const empprofile=(dispatch)=>{
     dispatch(empprofilerequest())
     axios.get(`${api}/empactivity/profile`).then((res)=>{
-        console.log(res)
+        // console.log(res,"profileres")
         dispatch(empprofilesuccess(res.data))
     }).catch((err)=>{
         console.log(err)

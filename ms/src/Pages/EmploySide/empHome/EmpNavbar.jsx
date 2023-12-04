@@ -60,7 +60,7 @@ const EmpNavbar = () => {
               }}
             >
               <Button variant="ghost"><Link to="/employee">EmpDetails</Link></Button>
-              <Button variant="ghost"><Link to="/projects">Projects</Link></Button>
+              <Button variant="ghost"><Link to="/report">Report</Link></Button>
               {/* <Button variant="ghost"><Link to="/blogBlog</Button> */}
               <Button variant="ghost"><Link to="/about">About</Link></Button>
               <Button variant="ghost">LogOut</Button>
