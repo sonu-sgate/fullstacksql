@@ -21,6 +21,7 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminlogin, adminloginfailure, adminloginsuccess } from '../Redux/Authenticaton/Admin/Login/Action';
 import axios from 'axios';
+import { emplogin, emploginfailure, emploginsuccess } from '../Redux/Authenticaton/Employee/Login/Action';
 
 const initialData = {
   email: '',
@@ -47,25 +48,44 @@ const navigate=useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault();
     // console.log(loginData, 'loginData');
-    console.log(location.pathname,"pathname")
+    // console.log(location.pathname,"pathname")
     // console.log(loginData)
     let newdata={...loginData,location:location.pathname}
-    dispatch(adminlogin(newdata)).then((res)=>{
-      // console.log(res)
-        dispatch(adminloginsuccess())
-        toast({"title":"success",status:"success",position:"top",duration:3000,description:res.data.msg})
-console.log(res.data.role)
-        if(res.data.role=="admin"){
-  navigate("/dashboard")
-}
-if(res.data.role=="employee"){
-  navigate("/employee")
-}
-        // navigate("/dashboard")
-    }).catch((err)=>{
-        dispatch(adminloginfailure())
-        toast({"title":"error",status:"error","position":'top',duration:3000,description:err.response.data.msg})
-    })
+    if(location.pathname=="/adminlogin"){
+      dispatch(adminlogin(newdata)).then((res)=>{
+        // console.log(res)
+          dispatch(adminloginsuccess())
+          toast({"title":"success",status:"success",position:"top",duration:3000,description:res.data.msg})
+  // console.log(res.data.role)
+    
+    navigate("/dashboard")
+  
+
+ 
+ 
+          // navigate("/dashboard")
+      }).catch((err)=>{
+          dispatch(adminloginfailure())
+          toast({"title":"error",status:"error","position":'top',duration:3000,description:err.response.data.msg})
+      })
+    }
+    if(location.pathname=="/employlogin"){
+      dispatch(emplogin(newdata)).then((res)=>{
+        // console.log(res)
+        // console.log(res)
+          dispatch(emploginsuccess(res.data))
+          toast({"title":"success",status:"success",position:"top",duration:3000,description:res.data.msg})
+
+    navigate("/employee")
+  
+ 
+          // navigate("/dashboard")
+      }).catch((err)=>{
+          dispatch(emploginfailure())
+          toast({"title":"error",status:"error","position":'top',duration:3000,description:err.response.data.msg})
+      })
+    }
+  
   };
 
   const handleTogglePassword = () => {

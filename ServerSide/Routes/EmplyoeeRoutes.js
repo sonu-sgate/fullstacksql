@@ -5,15 +5,22 @@ const { connection } = require("../Connection/connection")
 const empRouter=express.Router()
 empRouter.post("/login",async(req,res)=>{
     const {email,password}=req.body
+    // console.log(email,password,"back")
     const [empdata]= await connection.promise().query(`SELECT * FROM employ WHERE email='${email}'`)
+
+    const [joindata]=await connection.promise().query(`SELECT * FROM employ  INNER JOIN
+    category ON employ.category_id=category.id WHERE email='${email}'`)
+    // console.log(joindata)
     // console.log(empdata,"empdata")
-    
+// console.log(empdata[0].password)
     try{
         if(empdata.length>0){
             bcrypt.compare(password, empdata[0].password, function(err, result) {
+        
              if(result){
                 var token = jwt.sign({ userId:empdata[0].id,role:"employee",email:empdata[0].email }, 'ms');
-                res.status(200).json({msg:"Login Successfully",empdetails:empdata[0],token,role:"employee"})
+                // console.log(token)
+                res.status(200).json({msg:"Login Successfully",empdetails:joindata[0],token,role:"employee"})
              }else{
                 res.status(400).json({msg:"Wrong Password"})
              }

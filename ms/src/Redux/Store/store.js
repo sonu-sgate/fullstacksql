@@ -12,6 +12,8 @@ import { getempreducer } from "../Admin/Employee/GetEmployee/Reducer";
 import { getsingleempreducer } from "../Admin/Employee/GetSingle/Reducer";
 import { getcountreducer } from "../Admin/GetCounts/Reducer";
 import { amdinlogoutreducer } from "../Admin/Logout/Reducer";
+import { emploginreducer } from "../Authenticaton/Employee/Login/Reducer";
+
 const rootreducers=combineReducers({adminloginreducer,adminsignupreducer,addcatreducer,getcatreducer,
-    addempreducer,getempreducer,getsingleempreducer,getcountreducer,amdinlogoutreducer})
+    addempreducer,getempreducer,getsingleempreducer,getcountreducer,amdinlogoutreducer,emploginreducer})
 export const store=legacy_createStore(rootreducers,applyMiddleware(thunk))

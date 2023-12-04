@@ -9,13 +9,16 @@ import Employee from '../Pages/Dashboardpages/Employee'
 import Category from '../Pages/Dashboardpages/Category'
 import Profile from '../Pages/Dashboardpages/Profile'
 import EmpSingle from '../Pages/Dashboardpages/EmpSingle'
-import EmpHome from '../Pages/EmploySide/empHome/EmpHome'
+
+import EmpNavbar from '../Pages/EmploySide/empHome/EmpNavbar'
+import ProfileCard from '../Pages/EmploySide/empHome/EmpDetails'
 export default function AllRoutes() {
     const location=useLocation()
   return (
     <>
      {location.pathname!=="/dashboard"&&location.path=="/employee"&&location.pathname=="/category"
      &&location.pathname=="/profile"&& <Navbar/>}
+     {location.pathname=="/employee"&&<EmpNavbar/>}
       <Routes>
         {/* <Route path={"/"} element={<Login/>}/> */}
         <Route path="/adminlogin" element={<Login/>}/>
@@ -33,9 +36,14 @@ export default function AllRoutes() {
         </Route>
         <Route path="/employlogin" element={<Login/>}  />
         {/* <Route path="/" */}
-        {/* <Route path="/details/:id" element={<EmpSingle/>}/> */}
+
+        {/* empside................................... */}
+        <Route path="/employee" element={<ProfileCard/>}/>
+   
+
+
       </Routes>
-      
+
     </>
   )
 }
