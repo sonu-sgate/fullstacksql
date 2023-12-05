@@ -36,10 +36,10 @@ const EmpTable = ({ data }) => {
           {data.map((emp) => (
             <MotionBox
               as={Tr}
-              key={emp.id}
+              key={emp.empid}
               whileHover={{ scale: 1.03, backgroundColor: 'rgba(0, 0, 0, 0.03)' }}
             >
-              <Td>{emp.id}</Td>
+              <Td>{emp.empid}</Td>
               <Td>{emp.name}</Td>
               <Td>{emp.email}</Td>
               <Td>{emp.address&&emp.address.substring(0, 10)}...</Td>

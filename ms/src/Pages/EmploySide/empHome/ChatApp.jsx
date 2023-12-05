@@ -8,10 +8,13 @@ import {
   HStack,
   Avatar,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import io from 'socket.io-client';
-
+import { empprofile } from '../../../Redux/Authenticaton/Employee/empProfile/Action';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 const MotionBox = motion(Box);
 
 const socket = io('http://localhost:3000'); // Replace with your server URL
@@ -19,12 +22,26 @@ const socket = io('http://localhost:3000'); // Replace with your server URL
 const ChatApp = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-
+const [recieverId,setRecieverid]=useState(0)
+const dispatch=useDispatch()
+const profiledata=useSelector((state)=>state.empprofilereducer)
+const toast=useToast()
+const {profile}=profiledata
+// console.log(profile,"chatprofile")
   useEffect(() => {
     // Listen for incoming messages from the server
+dispatch(empprofile)
     socket.on('message', (message) => {
-      console.log(message)
-      setMessages((prevMessages) => [...prevMessages, message]);
+
+      // console.log(message,"chatdata",profile.empid)
+      if(message.recieverId==profile.empid){
+        // console.log(message.recieverId)
+       toast({description:message.text,status:"success",position:"top",duration:3000,status:'success'})
+        setMessages((prevMessages) => [...prevMessages, message]);
+      }
+      // console.log(message)
+      // console.log()
+     
     });
 
     // Clean up socket connection on component unmount
@@ -32,8 +49,9 @@ const ChatApp = () => {
   }, []);
 
   const handleSendMessage = () => {
-    if (newMessage.trim() !== '') {
-      const message = { text: newMessage, sender: 'user' };
+    if (newMessage.trim() !== ''&&recieverId!==0) {
+      const message = { text: newMessage, sender: 'user',userId:profile.id,name:profile.name,email:profile.email
+    ,recieverId}
 
       // Send the message to the server
       socket.emit('message', message);
@@ -43,6 +61,13 @@ const ChatApp = () => {
 
       // Clear the input field
       setNewMessage('');
+    }else{
+   toast({
+    description:"Please provide the required things",
+    "status":"error",
+    "position":"top",
+    duration:3000
+   })
     }
   };
 
@@ -83,7 +108,9 @@ const ChatApp = () => {
                 </HStack>
               ))}
             </VStack>
+             <Input placeholder='id' type="number" onChange={(e)=>setRecieverid(e.target.value)}/>
             <HStack>
+             
               <Input
                 flex="1"
                 placeholder="Type a message..."
