@@ -10,10 +10,7 @@ empRouter.post("/login",async(req,res)=>{
 
     const [joindata]=await connection.promise().query(`SELECT * FROM employ  INNER JOIN
     category ON employ.category_id=category.id WHERE email='${email}'`)
-    // console.log(joindata)
-    // console.log(empdata,"empdata")
-    // console.log(empdata,"emproute")
-// console.log(empdata[0].password)
+  
     try{
         if(empdata.length>0){
             bcrypt.compare(password, empdata[0].password, function(err, result) {

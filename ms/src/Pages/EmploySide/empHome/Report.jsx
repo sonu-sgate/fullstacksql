@@ -39,10 +39,14 @@ const {name,email,message}=reportdata
 if(name,email,message){
     // toast({description:resizeBy.dat})
     dispatch(report(reportdata)).then((res)=>{
-        console.log(res)
+        // console.log(res)
         dispatch(reportsuccess())
+   
         toast({description:"Reported Successfully,we will try our best",position:'top',duration:3000,status:"success"})
-    }).catch((err)=>{
+   
+   setReportdata(initialData)
+   
+      }).catch((err)=>{
         dispatch(reportfailure())
         toast({describe:'Something going wrong',position:"top",status:"error",duration:3000 })
     

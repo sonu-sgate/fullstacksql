@@ -33,7 +33,7 @@ empActivityrouter.post("/report",async(req,res)=>{
  
 
           const mailOptions = {
-            from:`"MS ❓" <${email}>`,
+            from:`MS 😕 `,
             to: "sgate.sonu@gmail.com",
             subject: 'Query from MS application user',
             text: `Name: ${name}\nEmail: ${email}\nMessage: ${message}`,
