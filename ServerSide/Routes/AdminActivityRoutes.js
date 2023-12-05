@@ -61,7 +61,7 @@ adminactivityRouter.post('/addemployee', upload.single('image'), async (req, res
     // Hash the password
     bcrypt.hash(password, 5, function (err, hash) {
       if (err) {
-        console.log(err);
+        // console.log(err);
         return res.status(400).json({ msg: 'Error in hashing password' });
       }
 
@@ -98,7 +98,7 @@ adminactivityRouter.get('/getemp', async (req, res) => {
 // Route to get a single employee by ID
 adminactivityRouter.get('/getsingleemp/:id', async (req, res) => {
   const { id } = req.params;
-  const query = `SELECT * FROM employ WHERE id=${id}`;
+  const query = `SELECT * FROM employ WHERE empid=${id}`;
   try {
     const [data] = await connection.promise().query(query);
     res.status(200).json({ msg: data });
@@ -110,7 +110,7 @@ adminactivityRouter.get('/getsingleemp/:id', async (req, res) => {
 // Route to get the count of admins, employees, and total
 adminactivityRouter.get('/getcount', async (req, res) => {
   const queryAdminCount = 'SELECT count(id) FROM admin';
-  const queryEmpCount = 'SELECT count(id) FROM employ';
+  const queryEmpCount = 'SELECT count(empid) FROM employ';
   const queryAdmins = 'SELECT * FROM admin';
 
   try {
@@ -120,8 +120,8 @@ adminactivityRouter.get('/getcount', async (req, res) => {
 
     res.status(200).json({
       admincount: adminCount[0]['count(id)'],
-      empcount: empCount[0]['count(id)'],
-      total: +(empCount[0]['count(id)']) + (+adminCount[0]['count(id)']),
+      empcount: empCount[0]['count(empid)'],
+      total: +(empCount[0]['count(empid)']) + (+adminCount[0]['count(id)']),
       admins,
     });
   } catch (err) {

@@ -8,7 +8,7 @@ empActivityrouter.get("/profile",async(req,res)=>{
     // console.log(email,"back")
     try{
 const [joindata]=await connection.promise().query(`SELECT * FROM employ INNER JOIN category ON employ.category_id=category.id Where email='${email}'`)
-console.log(joindata,"joindataprofile")
+// console.log(joindata,"joindataprofile")
 res.status(200).json({profile:joindata[0]})
     }catch(err){
         res.status(400).json({msg:"Something going wrong"})
@@ -42,7 +42,7 @@ empActivityrouter.post("/report",async(req,res)=>{
         
          transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-              console.error(error);
+              // console.error(error);
               return res.status(500).json({ message: 'Failed to send email' });
             }
         

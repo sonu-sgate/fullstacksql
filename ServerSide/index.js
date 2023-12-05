@@ -31,20 +31,6 @@ app.use(cors({
 app.use(express.json());
 const users = {};
 
-io.on('connection', (socket) => {
-  console.log('A user connected');
-
-  socket.on('message', (message) => {
-    console.log('Received message:', message);
-
-    io.emit('message', { text: message.text, sender: 'bot' });
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-});
-
 app.use("/auth",adminRouter);
 
 // Important to get static data (images)
@@ -55,6 +41,21 @@ app.use(express.static('Public'));
 app.use("/adminside",auth,adminactivityRouter);
 app.use("/empside",empRouter);
 app.use('/empactivity',empauth,  empActivityrouter);
+// io.use(empauth)
+io.on('connection', (socket) => {
+  console.log('A user connected');
+//   console.log(socket)
+
+  socket.on('message', (message) => {
+    console.log('Received message:', message);
+
+    io.emit('message', { text: message.text, sender: 'bot',recieverId:message.recieverId });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
 
 httpServer.listen(3000, async (req, res) => {
   try {

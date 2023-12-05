@@ -17,7 +17,7 @@ if(data.length>=1){
    try{
     bcrypt.compare(password, data[0].password, function(err, result) {
        if(result){
-        var token = jwt.sign({ userId:data[0].id,role:'admin',email:data[0].email }, 'ms',{expiresIn:'1d'})
+        var token = jwt.sign({ userId:data[0].empid,role:'admin',email:data[0].email }, 'ms',{expiresIn:'1d'})
         res.cookie("token",token)
         res.status(200).json({msg:"LOGIN SUCCESSFULLY",role:"admin"})
        }else{
@@ -36,7 +36,7 @@ adminRouter.post("/adminsignup",async(req,res)=>{
     const {email,password}=req.body
     const query=`SELECT * FROM admin WHERE email='${email}'`
 const [singledata]=await connection.promise().query(query)
-console.log(singledata)
+// console.log(singledata)
 if(singledata.length>0){
     res.status(400).json({msg:"Already Registered"})
 }else{
