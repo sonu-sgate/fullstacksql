@@ -17,6 +17,8 @@ import AdminPrivateRoute from './Priavateroutes/AdminPrivateRoute'
 import AboutUsPage from '../Pages/EmploySide/empHome/AboutUs'
 import LearnMorePage from '../Pages/EmploySide/empHome/LearnMore'
 import ReportForm from '../Pages/EmploySide/empHome/Report'
+import Attendence from '../Pages/EmploySide/empHome/Attendence'
+import ChatApp from '../Pages/EmploySide/empHome/ChatApp'
 export default function AllRoutes() {
     const location=useLocation()
   return (
@@ -48,6 +50,8 @@ export default function AllRoutes() {
    <Route path="/learnmore" element={<LearnMorePage/>}/>
 <Route path="/about" element={<AboutUsPage/>}/>
 <Route path="/report" element={<EmpPrivateRoute><ReportForm/></EmpPrivateRoute>}/>
+<Route path="/attendence" element={<Attendence/>}/>
+<Route path="/chat" element={<ChatApp/>}/>
 
       </Routes>
 

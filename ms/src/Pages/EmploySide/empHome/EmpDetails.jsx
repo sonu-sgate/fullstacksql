@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Flex, Box, Image, Text, HStack, Center, Heading } from '@chakra-ui/react';
+import { Flex, Box, Image, Text, HStack, Center, Heading, Button } from '@chakra-ui/react';
 import { FaSuitcase, FaMapPin, FaEnvelope } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { api } from '../../../Redux/Api/api';
@@ -7,6 +7,8 @@ import { MdLocationCity } from 'react-icons/md';
 import { empprofile } from '../../../Redux/Authenticaton/Employee/empProfile/Action';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { AiOutlineEnter } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 const ProfileCard = () => {
     const profiledata=useSelector((state)=>state.empprofilereducer)
     // console.log(profile,"userprofile")
@@ -15,6 +17,7 @@ const ProfileCard = () => {
     const dispatch=useDispatch()
     const {profile,profileisLoading,prfileisError}=profiledata
     axios.defaults.withCredentials=true
+    const navigate=useNavigate()
     useEffect(()=>{
 dispatch(empprofile)
     },[])
@@ -23,6 +26,8 @@ if(profile){
 
 
   return (
+    <>
+    <Button bg="green.200" position={"absolute"} top="20%" left={"80%"} onClick={()=>navigate("/attendence")}>Entery+</Button>
     <Flex
       bg="#edf3f8"
       _dark={{
@@ -152,7 +157,7 @@ if(profile){
           </HStack>
         </Box>
       </Flex>
-    </Flex>
+    </Flex></>
   );}else{
     return <Center><Heading>No data found...!!</Heading></Center>
   }

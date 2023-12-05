@@ -1,42 +1,72 @@
-const express=require('express')
-const cors=require("cors")
-const { connection } = require('./Connection/connection')
-const { adminRouter } = require('./Routes/Amdinroutes')
-const { adminactivityRouter } = require('./Routes/AdminActivityRoutes')
-const { auth } = require('./Middleware/Auth')
+const express = require('express');
+const cors = require('cors');
+const http = require('http');
+const { Server } = require('socket.io');
+const { connection } = require('./Connection/connection');
+const { adminRouter } = require('./Routes/Amdinroutes');
+const { adminactivityRouter } = require('./Routes/AdminActivityRoutes');
+const { auth } = require('./Middleware/Auth');
 const cookieParser = require('cookie-parser');
-const { empRouter } = require('./Routes/EmplyoeeRoutes')
-const { empActivityrouter } = require('./Routes/EmpActivityRouter')
-const { empauth } = require('./Middleware/Empauth')
-const app=express()
-app.use(cors({
-    origin:["http://localhost:5173"],
-    methods:["GET","POST","PUT","PATCH"],
-    credentials:true
-}))
-app.use(express.json())
+const { empRouter } = require('./Routes/EmplyoeeRoutes');
+const { empActivityrouter } = require('./Routes/EmpActivityRouter');
+const { empauth } = require('./Middleware/Empauth');
 
-app.use("/auth",adminRouter)
-// importent to get static data(images)
+const app = express();
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'PATCH'],
+    credentials: true,
+  },
+});
+
+app.use(express.static('build'));
+
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH'],
+  credentials: true,
+}));
+app.use(express.json());
+const users = {};
+
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  socket.on('message', (message) => {
+    console.log('Received message:', message);
+
+    io.emit('message', { text: message.text, sender: 'bot' });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
+
+app.use("/auth",adminRouter);
+
+// Important to get static data (images)
 app.use(cookieParser());
 
+app.use(express.static('Public'));
 
-app.use(express.static('Public'))
+app.use("/adminside",auth,adminactivityRouter);
+app.use("/empside",empRouter);
+app.use('/empactivity',empauth,  empActivityrouter);
 
-app.use("/adminside",auth,adminactivityRouter)
-app.use("/empside",empRouter)
-app.use('/empactivity',empauth,  empActivityrouter)
-app.listen(3000,async(req,res)=>{
-    try{
-        connection.connect((error)=>{
-            if(error){
-                console.log("not able to connect with database")
-            }else{
-                console.log("we connected with database enjoy!")
-            }
-            console.log('server is running on port 3000')
-        })
-    }catch{
-        console.log("something going wrong !!")
-    }
-})
+httpServer.listen(3000, async (req, res) => {
+  try {
+    connection.connect((error) => {
+      if (error) {
+        console.log('Not able to connect with the database');
+      } else {
+        console.log('Connected to the database');
+      }
+      console.log('Server is running on port 3000');
+    });
+  } catch (error) {
+    console.log('Something went wrong:', error);
+  }
+});
