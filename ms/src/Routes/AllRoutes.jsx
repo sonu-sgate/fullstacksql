@@ -25,7 +25,8 @@ export default function AllRoutes() {
     <>
      {location.pathname!=="/dashboard"&&location.path=="/employee"&&location.pathname=="/category"
      &&location.pathname=="/profile"&& <Navbar/>}
-     {location.pathname=="/employee"?<EmpNavbar/>:location.pathname=="/report"?<EmpNavbar/>:location.pathname=="/about"?<EmpNavbar/>:""}
+     {location.pathname=="/employee"?<EmpNavbar/>:location.pathname=="/report"?<EmpNavbar/>:location.pathname=="/about"?<EmpNavbar/>:
+     location.pathname=="/chat"?<EmpNavbar/>:""}
       <Routes>
         {/* <Route path={"/"} element={<Login/>}/> */}
         <Route path="/adminlogin" element={<Login/>}/>

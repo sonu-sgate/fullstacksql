@@ -54,7 +54,8 @@ navigate("/")
         }}
         py={4}
         shadow="md"
-      >
+        position={"sticky"}
+top={0.1}      >
         <Flex alignItems="center" justifyContent="space-between" mx="auto">
           <Flex>
             <chakra.a href="/" title="Choc Home Page" display="flex" alignItems="center">

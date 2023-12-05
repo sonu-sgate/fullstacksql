@@ -11,6 +11,7 @@ import {
   useToast,
   InputGroup,
   InputLeftElement,
+  Image,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import io from 'socket.io-client';
@@ -19,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { FaUser } from 'react-icons/fa';
 import axios from 'axios';
+import { ChatIcon } from '@chakra-ui/icons';
 
 const MotionBox = motion(Box);
 
@@ -84,20 +86,23 @@ axios.defaults.withCredentials=true
 
   return (
     <ChakraProvider>
+   
       <VStack
-        height="100vh"
-        justifyContent="flex-end"
+       height={"600px"}
+  
+        // justifyContent="flex-end"
         padding={4}
-        backgroundImage="linear-gradient(to right, #65dfc9, #6cdbeb)"
+        // backgroundImage="linear-gradient(to right, #65dfc9, #6cdbeb)"
       >
         <MotionBox
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <VStack spacing={4} width="400px" borderRadius="md" backgroundColor="white" padding={4}>
+          <VStack spacing={4} width="400px" borderRadius="md" backgroundColor="white" padding={14} >
+           <Image src="https://img.freepik.com/premium-vector/emoji-raises-his-hands-asks-question_255498-189.jpg"/>
             <Text fontSize="2xl" fontWeight="bold">
-              Chat App
+              Ask To Your Colleague<ChatIcon/>
             </Text>
             <VStack spacing={4} align="stretch">
               {messages.map((message, index) => (
