@@ -12,9 +12,13 @@ import {
   CloseButton,
   VisuallyHidden,
   Avatar,
+  useToast,
 } from '@chakra-ui/react';
 import { AiOutlineMenu } from 'react-icons/ai'; // Import the menu icon
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { adminlogout } from '../../../Redux/Admin/Logout/Action';
+import axios from 'axios';
 
 const Logo = () => {
   // Assuming you have a Logo component
@@ -24,9 +28,21 @@ const Logo = () => {
 };
 
 const EmpNavbar = () => {
+  const navigate=useNavigate()
   const bg = useColorModeValue('white', 'gray.800');
   const mobileNav = useDisclosure();
+const dispatch=useDispatch()
+const toast=useToast()
+axios.defaults.withCredentials=true
 
+const handlelogout=()=>{
+  dispatch(adminlogout).then((res)=>{
+toast({"description":res.data.msg,status:"success",position:"top",duration:3000})
+navigate("/")
+  }).catch((err)=>{
+    toast({"description":"error to logout",status:"error",position:"top",duration:3000})
+  })
+}
   return (
     <React.Fragment>
       <chakra.header
@@ -63,7 +79,7 @@ const EmpNavbar = () => {
               <Button variant="ghost"><Link to="/report">Report</Link></Button>
               {/* <Button variant="ghost"><Link to="/blogBlog</Button> */}
               <Button variant="ghost"><Link to="/about">About</Link></Button>
-              <Button variant="ghost">LogOut</Button>
+              <Button variant="ghost" onClick={handlelogout}>LogOut</Button>
             </HStack>
             <Button colorScheme="brand" size="sm">
               Get Started
