@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Flex, Box, Heading, Input, Textarea, Button, useToast } from '@chakra-ui/react';
 import { AiOutlineBug } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { report, reportfailure, reportsuccess } from '../../../Redux/Authenticaton/Employee/Report/Action';
+import axios from 'axios';
+import { empprofile } from '../../../Redux/Authenticaton/Employee/empProfile/Action';
 const initialData={
     name:"",
     email:"",
@@ -14,12 +18,35 @@ const ReportForm = () => {
     const {name,value}=e.target
     setReportdata((pre)=>({...pre,[name]:value}))
   }
+  const dispatch=useDispatch()
+  const profiledata=useSelector((state)=>state.empprofilereducer)
+  const {profile}=profiledata
+  // console.log(profile,"reportprofile")
+  const reportstoreddata=useSelector((state)=>state.reportreducer)
+  const {reportisLoading,reportisError}=reportdata
+  
+  axios.defaults.withCredentials=true
+  
+  useEffect(()=>{
+    dispatch(empprofile)
+    profile&&setReportdata((pre)=>({...pre,name:profile.name,email:profile.email}))
+  },[])
   
   const handleSubmit = (e) => {
     e.preventDefault();
 const {name,email,message}=reportdata
+
 if(name,email,message){
     // toast({description:resizeBy.dat})
+    dispatch(report(reportdata)).then((res)=>{
+        console.log(res)
+        dispatch(reportsuccess())
+        toast({description:"Reported Successfully,we will try our best",position:'top',duration:3000,status:"success"})
+    }).catch((err)=>{
+        dispatch(reportfailure())
+        toast({describe:'Something going wrong',position:"top",status:"error",duration:3000 })
+    
+    })
 }else{
   
     toast({description:"Please provide required details",status:"error","duration":3000,"position":"top"})
