@@ -53,4 +53,16 @@ empActivityrouter.post("/report",async(req,res)=>{
       
     
 })
+
+// getting all emloyees.module.............
+empActivityrouter.get("/get",async(req,res)=>{
+  try{
+const [data]=await connection.promise().query('SELECT * FROM emloy')
+res.status(400).json({msg:data})
+  }catch(err){
+    res.status(400).json({msg:"something going wrong"})
+  }
+})
+// payment system..........................................
+
 module.exports={empActivityrouter}

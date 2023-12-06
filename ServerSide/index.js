@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
+// const bodyParser=require("body")
 const { Server } = require('socket.io');
 const { connection } = require('./Connection/connection');
 const { adminRouter } = require('./Routes/Amdinroutes');
@@ -32,7 +33,8 @@ app.use(express.json());
 const users = {};
 
 app.use("/auth",adminRouter);
-
+// for urlpurpose
+// app.use(bodyParser.urlencoded({ extended: true }));
 // Important to get static data (images)
 app.use(cookieParser());
 
