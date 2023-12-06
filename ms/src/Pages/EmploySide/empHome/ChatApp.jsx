@@ -94,30 +94,21 @@ const ChatApp = () => {
       });
     }
   };
-  console.log("data", data);
+  // console.log("data", data);
   return (
     <ChakraProvider>
-      {data && data.length > 0 && data.map((item, index) => <EmpsideTable id={item.empid} name={item.name} cat={item.categoryname
-}  />)}
-
-      {/* <Box>
-        <Table>
-          <Thead>
-            <Td>EmpId</Td>
-            <Td>Nmae</Td>
-            <Td>Category</Td>
-          </Thead>
-
-          {data &&
-            data.map((item, index) => (
-              <Tbody>
-                <Tr>{item.empid}</Tr>
-                <Tr>{item.name}</Tr>
-                <Tr>{item.category}</Tr>{" "}
-              </Tbody>
-            ))}
-        </Table>
-      </Box> */}
+    
+      <Box >
+        {data &&
+          data.length > 0 &&
+          data.map((item, index) => (
+            <EmpsideTable
+              id={item.empid}
+              name={item.name}
+              cat={item.categoryname}
+            />
+          ))}
+      </Box>
       <VStack
         height={"600px"}
         // justifyContent="flex-end"

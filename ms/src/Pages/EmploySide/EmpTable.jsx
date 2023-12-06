@@ -7,7 +7,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { useRef } from "react";
+
 const EmpsideTable = ({id,name,cat}) => {
 
   
@@ -20,7 +20,6 @@ const EmpsideTable = ({id,name,cat}) => {
     newData.splice(index, 1);
     setData(newData);
   };
-   const personListRef = useRef(null);
   const handleScrollToPersonList = () => {
     if (personListRef.current) {
       personListRef.current.scrollIntoView({ behavior: "smooth" });
@@ -125,9 +124,9 @@ const EmpsideTable = ({id,name,cat}) => {
                 variant="solid"
                 colorScheme="red"
                 size="sm"
-                onClick={() => handleScrollToPersonList()}
+                onClick={() => handleDelete(pid)}
               >
-                Click
+               Click
               </Button>
             </Flex>
           </SimpleGrid>
