@@ -18,6 +18,7 @@ import {
   Tbody,
   Td,
   Tr,
+  TableContainer,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import io from "socket.io-client";
@@ -29,6 +30,7 @@ import axios from "axios";
 import { ChatIcon } from "@chakra-ui/icons";
 import { getempside } from "../../../Redux/Authenticaton/Employee/GetEmp/Action";
 import EmpsideTable from "../EmpTable";
+import EmpTable from "../EmpTable";
 
 const MotionBox = motion(Box);
 
@@ -94,95 +96,116 @@ const ChatApp = () => {
       });
     }
   };
+  const hanldechatid=(id)=>{
+    setRecieverId(id)
+    // console.log("id",id)
+  }
   // console.log("data", data);
   return (
-    <ChakraProvider>
-    
-      <Box >
-        {data &&
-          data.length > 0 &&
-          data.map((item, index) => (
-            <EmpsideTable
-              id={item.empid}
-              name={item.name}
-              cat={item.categoryname}
-            />
-          ))}
-      </Box>
-      <VStack
-        height={"600px"}
-        // justifyContent="flex-end"
-        padding={4}
-        // backgroundImage="linear-gradient(to right, #65dfc9, #6cdbeb)"
-      >
-        <MotionBox
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <VStack
-            spacing={4}
-            width="400px"
-            borderRadius="md"
-            backgroundColor="white"
-            padding={14}
-          >
-            <Image src="https://img.freepik.com/premium-vector/emoji-raises-his-hands-asks-question_255498-189.jpg" />
-            <Text fontSize="2xl" fontWeight="bold">
-              Ask To Your Colleague
-              <ChatIcon />
-            </Text>
-            <VStack spacing={4} align="stretch">
-              {messages.map((message, index) => (
-                <HStack
-                  key={index}
-                  justifyContent={
-                    message.sender === "user" ? "flex-end" : "flex-start"
-                  }
-                >
-                  {message.sender === "bot" && (
-                    <Avatar size="sm" icon={<FaUser />} />
-                  )}
-                  <Box
-                    borderRadius="md"
-                    backgroundColor={
-                      message.sender === "user" ? "teal.500" : "gray.200"
-                    }
-                    padding={3}
-                    color={message.sender === "user" ? "white" : "black"}
-                  >
-                    {message.text}
-                  </Box>
-                  {message.sender === "user" && (
-                    <Avatar size="sm" icon={<FaUser />} />
-                  )}
-                </HStack>
-              ))}
-            </VStack>
+    <>
+      {" "}
+      <Box>
+        <TableContainer width={"80%"} margin={"auto"}>
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>EmployId</Th>
+                <Th>Name</Th>
+                <Th>Category</Th>
+                <Th>Action</Th>
+              </Tr>
+            </Thead>
 
-            <InputGroup>
-              <InputLeftElement pointerEvents="none" children={<FaUser />} />
-              <Input
-                placeholder="Recipient ID"
-                type="number"
-                onChange={(e) => setRecieverId(e.target.value)}
-              />
-            </InputGroup>
-            <HStack>
-              <Input
-                flex="1"
-                placeholder="Type a message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-              />
-              <Button colorScheme="teal" onClick={handleSendMessage}>
-                Send
-              </Button>
-            </HStack>
-          </VStack>
-        </MotionBox>
-      </VStack>
-    </ChakraProvider>
+            {data &&
+              data.length > 0 &&
+              data.map((item, index) => (
+                <EmpTable
+                  id={item.empid}
+                  name={item.name}
+                  cat={item.categoryname}
+                  hanldechatid={hanldechatid}
+                />
+              ))}
+          </Table>
+        </TableContainer>
+      </Box>
+      <ChakraProvider>
+        <VStack
+          height={"600px"}
+          // justifyContent="flex-end"
+          padding={4}
+          // backgroundImage="linear-gradient(to right, #65dfc9, #6cdbeb)"
+        >
+          <MotionBox
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <VStack
+              spacing={4}
+              width="400px"
+              borderRadius="md"
+              backgroundColor="white"
+              padding={14}
+            >
+              <Image src="https://img.freepik.com/premium-vector/emoji-raises-his-hands-asks-question_255498-189.jpg" />
+              <Text fontSize="2xl" fontWeight="bold">
+                Ask To Your Colleague
+                <ChatIcon />
+              </Text>
+              <VStack spacing={4} align="stretch">
+                {messages.map((message, index) => (
+                  <HStack
+                    key={index}
+                    justifyContent={
+                      message.sender === "user" ? "flex-end" : "flex-start"
+                    }
+                  >
+                    {message.sender === "bot" && (
+                      <Avatar size="sm" icon={<FaUser />} />
+                    )}
+                    <Box
+                      borderRadius="md"
+                      backgroundColor={
+                        message.sender === "user" ? "teal.500" : "gray.200"
+                      }
+                      padding={3}
+                      color={message.sender === "user" ? "white" : "black"}
+                    >
+                      {message.text}
+                    </Box>
+                    {message.sender === "user" && (
+                      <Avatar size="sm" icon={<FaUser />} />
+                    )}
+                  </HStack>
+                ))}
+              </VStack>
+
+              <InputGroup>
+                <InputLeftElement pointerEvents="none" children={<FaUser />} />
+                <Input
+                value={recieverId}
+                  placeholder="Recipient ID"
+                  type="number"
+                  onChange={(e) => setRecieverId(e.target.value)}
+                />
+              </InputGroup>
+              <HStack>
+                <Input
+                  flex="1"
+                  placeholder="Type a message..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                />
+                <Button colorScheme="teal" onClick={handleSendMessage}>
+                  Send
+                </Button>
+              </HStack>
+            </VStack>
+          </MotionBox>
+        </VStack>
+      </ChakraProvider>
+    </>
   );
 };
 
