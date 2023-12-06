@@ -55,10 +55,12 @@ empActivityrouter.post("/report",async(req,res)=>{
 })
 
 // getting all emloyees.module.............
-empActivityrouter.get("/get",async(req,res)=>{
+empActivityrouter.get("/getdata",async(req,res)=>{
+  // console.log("hi")
   try{
-const [data]=await connection.promise().query('SELECT * FROM emloy')
-res.status(400).json({msg:data})
+const [data]=await connection.promise().query('SELECT * FROM employ INNER JOIN category ON category.id=employ.category_id')
+// console.log(data)
+res.status(200).json({msg:data})
   }catch(err){
     res.status(400).json({msg:"something going wrong"})
   }

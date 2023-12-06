@@ -54,6 +54,7 @@ navigate("/")
         }}
         py={4}
         shadow="md"
+        zIndex={100}
         position={"sticky"}
 top={0.1}      >
         <Flex alignItems="center" justifyContent="space-between" mx="auto">

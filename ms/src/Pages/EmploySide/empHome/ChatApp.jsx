@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   ChakraProvider,
   Box,
@@ -12,39 +12,50 @@ import {
   InputGroup,
   InputLeftElement,
   Image,
-} from '@chakra-ui/react';
-import { motion } from 'framer-motion';
-import io from 'socket.io-client';
-import { empprofile } from '../../../Redux/Authenticaton/Employee/empProfile/Action';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { FaUser } from 'react-icons/fa';
-import axios from 'axios';
-import { ChatIcon } from '@chakra-ui/icons';
+  Table,
+  Thead,
+  Th,
+  Tbody,
+  Td,
+  Tr,
+} from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import io from "socket.io-client";
+import { empprofile } from "../../../Redux/Authenticaton/Employee/empProfile/Action";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { FaUser } from "react-icons/fa";
+import axios from "axios";
+import { ChatIcon } from "@chakra-ui/icons";
+import { getempside } from "../../../Redux/Authenticaton/Employee/GetEmp/Action";
+import EmpsideTable from "../EmpTable";
 
 const MotionBox = motion(Box);
 
-const socket = io('http://localhost:3000'); // Replace with your server URL
+const socket = io("http://localhost:3000"); // Replace with your server URL
 
 const ChatApp = () => {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const [recieverId, setRecieverId] = useState(0);
   const dispatch = useDispatch();
   const profiledata = useSelector((state) => state.empprofilereducer);
   const toast = useToast();
   const { profile } = profiledata;
+  const empdata = useSelector((state) => state.getempsidereducer);
+  const { getempisLoading, getempisError, data } = empdata;
   // most imp. line to work with cookie...............
-axios.defaults.withCredentials=true
+  axios.defaults.withCredentials = true;
   useEffect(() => {
     // Listen for incoming messages from the server
     dispatch(empprofile);
-    socket.on('message', (message) => {
+    dispatch(getempside);
+    socket.on("message", (message) => {
       if (message.recieverId === profile.empid) {
         toast({
           description: message.text,
-          status: 'success',
-          position: 'top',
+          status: "success",
+          position: "top",
           duration: 3000,
         });
         setMessages((prevMessages) => [...prevMessages, message]);
@@ -54,12 +65,12 @@ axios.defaults.withCredentials=true
     // Clean up socket connection on component unmount
     return () => socket.disconnect();
   }, []);
-
+  // console.log(data,"dataemp")
   const handleSendMessage = () => {
-    if (newMessage.trim() !== '' && recieverId !== 0) {
+    if (newMessage.trim() !== "" && recieverId !== 0) {
       const message = {
         text: newMessage,
-        sender: 'user',
+        sender: "user",
         userId: profile.id,
         name: profile.name,
         email: profile.email,
@@ -67,29 +78,48 @@ axios.defaults.withCredentials=true
       };
 
       // Send the message to the server
-      socket.emit('message', message);
+      socket.emit("message", message);
 
       // Update the local state
       setMessages([...messages, message]);
 
       // Clear the input field
-      setNewMessage('');
+      setNewMessage("");
     } else {
       toast({
-        description: 'Please provide the required information',
-        status: 'error',
-        position: 'top',
+        description: "Please provide the required information",
+        status: "error",
+        position: "top",
         duration: 3000,
       });
     }
   };
-
+  console.log("data", data);
   return (
     <ChakraProvider>
-   
+      {data && data.length > 0 && data.map((item, index) => <EmpsideTable id={item.empid} name={item.name} cat={item.categoryname
+}  />)}
+
+      {/* <Box>
+        <Table>
+          <Thead>
+            <Td>EmpId</Td>
+            <Td>Nmae</Td>
+            <Td>Category</Td>
+          </Thead>
+
+          {data &&
+            data.map((item, index) => (
+              <Tbody>
+                <Tr>{item.empid}</Tr>
+                <Tr>{item.name}</Tr>
+                <Tr>{item.category}</Tr>{" "}
+              </Tbody>
+            ))}
+        </Table>
+      </Box> */}
       <VStack
-       height={"600px"}
-  
+        height={"600px"}
         // justifyContent="flex-end"
         padding={4}
         // backgroundImage="linear-gradient(to right, #65dfc9, #6cdbeb)"
@@ -99,30 +129,46 @@ axios.defaults.withCredentials=true
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <VStack spacing={4} width="400px" borderRadius="md" backgroundColor="white" padding={14} >
-           <Image src="https://img.freepik.com/premium-vector/emoji-raises-his-hands-asks-question_255498-189.jpg"/>
+          <VStack
+            spacing={4}
+            width="400px"
+            borderRadius="md"
+            backgroundColor="white"
+            padding={14}
+          >
+            <Image src="https://img.freepik.com/premium-vector/emoji-raises-his-hands-asks-question_255498-189.jpg" />
             <Text fontSize="2xl" fontWeight="bold">
-              Ask To Your Colleague<ChatIcon/>
+              Ask To Your Colleague
+              <ChatIcon />
             </Text>
             <VStack spacing={4} align="stretch">
               {messages.map((message, index) => (
                 <HStack
                   key={index}
-                  justifyContent={message.sender === 'user' ? 'flex-end' : 'flex-start'}
+                  justifyContent={
+                    message.sender === "user" ? "flex-end" : "flex-start"
+                  }
                 >
-                  {message.sender === 'bot' && <Avatar size="sm" icon={<FaUser />} />}
+                  {message.sender === "bot" && (
+                    <Avatar size="sm" icon={<FaUser />} />
+                  )}
                   <Box
                     borderRadius="md"
-                    backgroundColor={message.sender === 'user' ? 'teal.500' : 'gray.200'}
+                    backgroundColor={
+                      message.sender === "user" ? "teal.500" : "gray.200"
+                    }
                     padding={3}
-                    color={message.sender === 'user' ? 'white' : 'black'}
+                    color={message.sender === "user" ? "white" : "black"}
                   >
                     {message.text}
                   </Box>
-                  {message.sender === 'user' && <Avatar size="sm" icon={<FaUser />} />}
+                  {message.sender === "user" && (
+                    <Avatar size="sm" icon={<FaUser />} />
+                  )}
                 </HStack>
               ))}
             </VStack>
+
             <InputGroup>
               <InputLeftElement pointerEvents="none" children={<FaUser />} />
               <Input
