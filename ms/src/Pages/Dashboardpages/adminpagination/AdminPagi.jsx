@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -7,11 +7,21 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useSearchParams } from "react-router-dom";
 
 const Adminpagination = ({ currentPage, totalPages, onPageChange }) => {
-  const isLastPage = currentPage === totalPages;
-  const isFirstPage = currentPage === 1;
-
+    const [searchparams,setSearchParams]=useSearchParams()
+//   const isLastPage = currentPage === totalPages;
+//   const isFirstPage = currentPage === 1;
+  console.log(currentPage,"currentpage")
+// console.log(currentPage,totalPages,"hi")
+// useEffect(()=>{
+// // const searchParams = new URLSearchParams(window.location.search);
+// const newparams={...searchparams.entries(),page:currentPage}
+// // Log the complete search parameters object to the console
+// setSearchParams(newparams)
+// console.log(Object.fromEntries(searchparams.entries()),"paramobj");
+// },[currentPage])
   return (
     <HStack
       justify="center"
@@ -20,36 +30,24 @@ const Adminpagination = ({ currentPage, totalPages, onPageChange }) => {
       color={useColorModeValue("gray.700", "gray.300")}
     >
       <Button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={isFirstPage}
+      isDisabled={currentPage==1?true:false}
+        onClick={() => currentPage >=1 && onPageChange(+currentPage - 1)}
+   
         variant="ghost"
       >
         Previous
       </Button>
 
       <HStack spacing={1}>
-        {[...Array(totalPages)].map((_, index) => (
-          <chakra.div
-            key={index}
-            px={2}
-            py={1}
-            _hover={{
-              cursor: "pointer",
-              bg: useColorModeValue("gray.200", "gray.700"),
-            }}
-            onClick={() => onPageChange(index + 1)}
-            borderRadius="md"
-            color={index + 1 === currentPage ? "white" : undefined}
-            bg={index + 1 === currentPage ? "blue.500" : undefined}
-          >
-            {index + 1}
-          </chakra.div>
-        ))}
+      {currentPage}
       </HStack>
 
       <Button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={isLastPage}
+        isDisabled={+currentPage==totalPages?true:false}
+        onClick={() =>
+          +currentPage <= totalPages && onPageChange(+currentPage + 1)
+        }
+
         variant="ghost"
       >
         Next

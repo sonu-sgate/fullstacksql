@@ -14,7 +14,7 @@ const AdminTable = ({ data }) => {
     const location=useLocation()
 
   return (
-    <Box>
+    <Box w="60%" margin="auto">
       <MotionBox
         as={Table}
         borderWidth="1px"
@@ -57,7 +57,7 @@ const AdminTable = ({ data }) => {
           ))}
         </Tbody>
       </MotionBox>
-      <Adminpagination/>
+      {/* <Adminpagination/> */}
     </Box>
   );
 };
