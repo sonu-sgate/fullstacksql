@@ -128,6 +128,7 @@ adminactivityRouter.get('/getcount', async (req, res) => {
     res.status(400).json({ msg: 'Something went wrong' });
   }
 });
+// route to get admins.............
 adminactivityRouter.get("/admins",async(req,res)=>{
   const {email,sortby,order,page,limit}=req.query
 
@@ -140,8 +141,15 @@ if(order&&sortby){
   query+=`ORDER BY ${sortby} ${order} `
 }
   if(page&&limit){
+    const OFFSET=(+page-1)*(+limit)
+    query+=`LIMIT ${+limit} OFFSET ${+OFFSET} `
+    // const totalpage=0
+    const [totalcount]=await connection.promise().query('SELECT COUNT(id) FROM admin')
+    console.log(totalcount,"totalcount")
+    const totalpages=Math.ceil(+totalcount[0]['COUNT(id)']/+limit)
+    // console.log(totalpages,"totalpages")
 const [admins]=await connection.promise().query(query)
-  
+  res.status(200).json({msg:admins,totalpages})
   try{
 
   }catch(err){
