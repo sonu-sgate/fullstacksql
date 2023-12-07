@@ -46,13 +46,14 @@ const EmpTable = ({ id, name, cat,hanldechatid }) => {
     onClose();
   };
 
-  const scrollToBottom = (id) => {
-    hanldechatid(id)
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth",
-    });
-  };
+const scrollToBottom = (id) => {
+  hanldechatid(id);
+  document.body.style.scrollBehavior = "smooth"; // Enable smooth scrolling
+  window.scrollTo({
+    top: document.body.scrollHeight,
+  });
+  document.body.style.scrollBehavior = "auto"; // Disable smooth scrolling after the scroll
+};
 
   return (
     <Tbody key={id}>

@@ -6,6 +6,7 @@ import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import CatDeletedialoge from './Catdeletemodel';
 import { Link, useLocation } from 'react-router-dom';
 import { api } from '../../Redux/Api/api';
+import Adminpagination from './adminpagination/AdminPagi';
 
 const MotionBox = chakra(motion.div);
 
@@ -56,6 +57,7 @@ const AdminTable = ({ data }) => {
           ))}
         </Tbody>
       </MotionBox>
+      <Adminpagination/>
     </Box>
   );
 };

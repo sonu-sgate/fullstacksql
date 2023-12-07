@@ -40,7 +40,7 @@ app.use(cookieParser());
 
 app.use(express.static('Public'));
 
-app.use("/adminside",auth,adminactivityRouter);
+app.use("/adminside",adminactivityRouter);
 app.use("/empside",empRouter);
 app.use('/empactivity',empauth,  empActivityrouter);
 // io.use(empauth)

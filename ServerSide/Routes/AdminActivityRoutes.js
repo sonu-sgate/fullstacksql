@@ -128,7 +128,31 @@ adminactivityRouter.get('/getcount', async (req, res) => {
     res.status(400).json({ msg: 'Something went wrong' });
   }
 });
+adminactivityRouter.get("/admins",async(req,res)=>{
+  const {email,sortby,order,page,limit}=req.query
 
+  let query='SELECT * FROM admin '
+if(email){
+query+=`WHERE email LIKE '%${email}%' `
+}
+// console.log(query)
+if(order&&sortby){
+  query+=`ORDER BY ${sortby} ${order} `
+}
+  if(page&&limit){
+const [admins]=await connection.promise().query(query)
+  
+  try{
+
+  }catch(err){
+    res.status(400).json({msg:"Something going wrong"})
+  }}else{
+    console.log(query,"query")
+    const [admins]=await connection.promise().query(query)
+
+    res.status(200).json({msg:admins})
+  }
+})
 // Route for admin logout
 adminactivityRouter.get('/adminlogout', async (req, res) => {
   try {
