@@ -42,6 +42,7 @@ const AdminTable = ({ data }) => {
             <Th color="gray.700">Admin ID</Th>
             {/* <Th>Name</Th> */}
             <Th color="gray.700">Email</Th>
+            <Th>Action</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -57,19 +58,7 @@ const AdminTable = ({ data }) => {
               <Td>{admin.id}</Td>
               {/* <Td>{admin.name}</Td> */}
               <Td>{admin.email}</Td>
-              {/* <Td>
-                <Avatar src={`${api}/Images/` + emp.image} />
-              </Td>
-              <Td>
-                <Link to={`${location.pathname}/${emp.id}`}>More</Link>
-              </Td> */}
-              {/* <Td><EditIcon/></Td>
-              <Td>
-                <Tooltip label='Delete Category' fontSize='md'>
-                  <CatDeletedialoge />
-                </Tooltip>
-              </Td> */}
-              {/* <Td>{category.description}</Td> */}
+          <Td>MORE</Td>
             </MotionBox>
           ))}
         </Tbody>
@@ -80,4 +69,3 @@ const AdminTable = ({ data }) => {
 };
 
 export default AdminTable;
- 

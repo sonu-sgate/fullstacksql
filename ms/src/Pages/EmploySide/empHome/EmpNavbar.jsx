@@ -19,6 +19,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { adminlogout } from '../../../Redux/Admin/Logout/Action';
 import axios from 'axios';
+import Notifications from './Notification';
 
 const Logo = () => {
   // Assuming you have a Logo component
@@ -83,6 +84,7 @@ top={0.1}      >
               {/* <Button variant="ghost"><Link to="/blogBlog</Button> */}
               <Button variant="ghost"><Link to="/about">About</Link></Button>
               <Button variant="ghost" onClick={handlelogout}>LogOut</Button>
+              <Notifications/>
             </HStack>
             <Button colorScheme="brand" size="sm">
               Get Started
