@@ -12,7 +12,8 @@ export const usersignoutsuccess=()=>{
 export const usersignoutfailure=()=>{
     return {type:usersignoutfail}
 }
-export const usersignout=(obj)=>(dispatch)=>{
+export const usersignout=(id,obj)=>(dispatch)=>{
 dispatch(usersignoutrequest())
-return axios.post(`${api}/empactivity/signOut/${id}`,obj)
+// console.log(id,obj,'signoutdata')
+return axios.patch(`${api}/empactivity/signOut/${id}`,obj)
 }

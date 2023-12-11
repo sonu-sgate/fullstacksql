@@ -5,19 +5,28 @@ import { ChakraProvider, Box, Input, Button, Center, Heading, VStack, useToast }
 import { motion } from 'framer-motion';
 import { usersignin, usersigninsuccess, usersinginfailure } from '../../../Redux/Authenticaton/Employee/Attendence/SignIn/Action';
 import { getattend } from '../../../Redux/Authenticaton/Employee/Attendence/Get/Action';
+import { usersignout, usersignoutfailure, usersignoutsuccess } from '../../../Redux/Authenticaton/Employee/Attendence/SignOut/Action';
 
 const MotionBox = motion(Box);
-
+const initialdata = {
+  id: "",
+};
 function Attendence() {
   const [employeeId, setEmployeeId] = useState('');
   const [location, setLocation] = useState('');
+  const [refresh,setRefresh]=useState(false)
+  const [attendencedata,setAttendencedata]=useState(initialdata)
 const dispatch=useDispatch()
 const userstoreddata=useSelector((state)=>state.usersigninreducer)
 
-
+const storedattenddata=useSelector((state)=>state.getattendreducer)
+const {data}=storedattenddata
+console.log(data,"data")
+axios.defaults.withCredentials=true
 useEffect(()=>{
 dispatch(getattend)
-},[])
+setAttendencedata((pre)=>({...pre,id:data.id}))
+},[refresh])
 const toast=useToast()
 
 axios.defaults.withCredentials=true
@@ -42,6 +51,7 @@ dispatch(usersignin(obj)).then((res)=>{
   toast({
     description:res.data.msg,position:"top",status:"success",duration:3000
   })
+  setRefresh(!refresh)
 }).catch((err)=>{
   dispatch(usersinginfailure())
 })
@@ -56,6 +66,7 @@ dispatch(usersignin(obj)).then((res)=>{
     }
   };
 
+  axios.defaults.withCredentials=true
   const handleSignOut = async () => {
     try {
       // Use the geolocation API to get the user's location
@@ -69,8 +80,27 @@ dispatch(usersignin(obj)).then((res)=>{
 // console.log("fetchedlocationsinout",fetchedLocation)
           // Send the sign-out request to the server
           
-          await axios.post('http://localhost:3001/signout', {signOut: fetchedLocation });
-          alert('Employee signed out successfully.');
+     
+           dispatch(usersignout(attendencedata.id, { signOut: fetchedLocation })
+          ).then((res)=>{
+            dispatch(usersignoutsuccess())
+            toast({
+              "description":res.data.msg,
+              "status":"success",
+              "position":"top",
+              duration:3000
+            })
+            setRefresh(!refresh)
+          }).catch((err)=>{
+            dispatch(usersignoutfailure())
+            toast({
+              description:err.response.data.msg,
+              position:"top",
+              status:"error",
+              duration:3000
+            })
+          });
+         
         },
         (error) => {
           console.error('Error getting location:', error.message);

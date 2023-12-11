@@ -72,12 +72,15 @@ res.status(200).json({msg:data})
 empActivityrouter.post("/signIn",async(req,res)=>{
   const {signIn,signOut,userId}=req.body
 const currentDate = new Date();
+const date=new Date()
 const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+const formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+// console.log(formattedTime,"sfs")
 
 const [existingdata]=await connection.promise().query(`SELECT * FROM attendencetable WHERE date='${formattedDate}'`)
-console.log(existingdata,"existingdata")
+// console.log(existingdata,"existingdata")
 if(existingdata.length>0){
-  connection.query(`UPDATE attendencetable SET signIn='${signIn}' WHERE date='${formattedDate}'`,(error,results)=>{
+  connection.query(`UPDATE attendencetable SET signIn='${signIn}' , signInat='${formattedTime}' WHERE date='${formattedDate}'`,(error,results)=>{
     if(error){
       res.status(400).json({msg:"Not able to signIn"})
     }else{
@@ -87,7 +90,7 @@ if(existingdata.length>0){
 }
 else{
 try{
-connection.query(`Insert INTO attendencetable (userId,signIn,signOut,date) VALUES (?,?,?,?)`,[userId,signIn,signOut,formattedDate],(error,results)=>{
+connection.query(`Insert INTO attendencetable (userId,signIn,signOut,date,signInat) VALUES (?,?,?,?,?)`,[userId,signIn,signOut,formattedDate,formattedTime],(error,results)=>{
   if(error){
     // console.log(error)
     res.status(400).json({msg:"Something going wrong"})
@@ -109,15 +112,57 @@ connection.query(`Insert INTO attendencetable (userId,signIn,signOut,date) VALUE
 
 // signOut,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 empActivityrouter.patch("/signOut/:id",async(req,res)=>{
+  const {signOut}=req.body
+  const {id}=req.params
 const currentDate = new Date();
+const date=new Date()
 // console.log("hijji")
 const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
-
+const formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 const [existingdata]=await connection.promise().query(`SELECT * FROM attendencetable WHERE date='${formattedDate}'`)
-if(existingdata){
+// console.log(existingdata,"signout")
+
+
+const convertTimeStringToDate = (timeString) => {
+  const [time, period] = timeString.split(' ');
+  const [hour, minute] = time.split(':');
+  const date = new Date();
+  date.setHours(parseInt(hour) + (period === 'PM' && hour !== '12' ? 12 : 0));
+  date.setMinutes(parseInt(minute));
+  date.setSeconds(0);
+  return date;
+};
+
+
+
+// console.log(`User logged in at ${loginTimeString} and logged out at ${logoutTimeString}.`);
+// console.log(`User was on the site for ${hours} hours and ${minutes} minutes.`);
+
+if(existingdata.length>0){
+  // Convert login and logout time strings to Date objects
+const loginTime = convertTimeStringToDate(existingdata[0].signInat);
+const logoutTime = convertTimeStringToDate(formattedTime);
+
+const timeDifferenceMs = logoutTime - loginTime;
+
+// Convert milliseconds to minutes
+const timeDifferenceMin = Math.floor(timeDifferenceMs / (1000 * 60));
+
+// Calculate hours and remaining minutes
+const hours = Math.floor(timeDifferenceMin / 60);
+const minutes = timeDifferenceMin % 60;
 try{
-connection.query(`UPDATE attendencetable SET signOut='${signOut} WHERE id=${req.params}'`)
+connection.query(`UPDATE attendencetable SET signOut='${signOut}' , signOutat='${formattedTime}' ,totalworktime='${hours} hours ${minutes} minutes' WHERE id=${id}`,(error,results)=>{
+  if(error){
+    // console.log(error)
+    res.status(400).json({msg:"something going wrong"})
+  }else{
+    res.status(200).json({msg:"SignOut Successfully"})
+  }
+})
+
 }catch(err){
+  console.log(err,"error")
   res.status(400).json({msg:"something going wrong"})
 }
 }else{
@@ -126,5 +171,18 @@ connection.query(`UPDATE attendencetable SET signOut='${signOut} WHERE id=${req.
 
 
 
+})
+empActivityrouter.get('/get',async(req,res)=>{
+const currentDate = new Date();
+// console.log("hijji")
+const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+try{
+const [data] = await connection.promise().query('SELECT * FROM attendencetable WHERE userId = ? AND date = ?', [req.body.userId, formattedDate]);
+
+res.status(200).json({msg:data[0]})
+}catch(err){
+  // console.log(err)
+  res.status(400).json({msg:"somthing going wrong"})
+}
 })
 module.exports={empActivityrouter}
