@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { usersignin, usersigninsuccess, usersinginfailure } from '../../../Redux/Authenticaton/Employee/Attendence/SignIn/Action';
 import { getattend } from '../../../Redux/Authenticaton/Employee/Attendence/Get/Action';
 import { usersignout, usersignoutfailure, usersignoutsuccess } from '../../../Redux/Authenticaton/Employee/Attendence/SignOut/Action';
+import { useNavigate } from 'react-router-dom';
 
 const MotionBox = motion(Box);
 const initialdata = {
@@ -13,19 +14,22 @@ const initialdata = {
 };
 function Attendence() {
   const [employeeId, setEmployeeId] = useState('');
+  const [type,setType]=useState(false)
   const [location, setLocation] = useState('');
   const [refresh,setRefresh]=useState(false)
   const [attendencedata,setAttendencedata]=useState(initialdata)
 const dispatch=useDispatch()
+const navigate=useNavigate()
 const userstoreddata=useSelector((state)=>state.usersigninreducer)
 
 const storedattenddata=useSelector((state)=>state.getattendreducer)
 const {data}=storedattenddata
-console.log(data,"data")
+// console.log(data,"maindata")
 axios.defaults.withCredentials=true
 useEffect(()=>{
 dispatch(getattend)
-setAttendencedata((pre)=>({...pre,id:data.id}))
+data && setAttendencedata((pre) => ({ ...pre, id: data.id }));
+
 },[refresh])
 const toast=useToast()
 
@@ -52,6 +56,7 @@ dispatch(usersignin(obj)).then((res)=>{
     description:res.data.msg,position:"top",status:"success",duration:3000
   })
   setRefresh(!refresh)
+  setType(!type)
 }).catch((err)=>{
   dispatch(usersinginfailure())
 })
@@ -91,6 +96,7 @@ dispatch(usersignin(obj)).then((res)=>{
               duration:3000
             })
             setRefresh(!refresh)
+            setType(!type)
           }).catch((err)=>{
             dispatch(usersignoutfailure())
             toast({
@@ -123,18 +129,18 @@ dispatch(usersignin(obj)).then((res)=>{
             <Heading>Employee Attendance System</Heading>
           </MotionBox>
           <VStack spacing={4}>
-            <Input
+            {/* <Input
               type="text"
               placeholder="Employee ID"
               value={employeeId}
               onChange={(e) => setEmployeeId(e.target.value)}
-            />
-            <Button colorScheme="teal" onClick={handleSignIn}>
-              Sign In
+            /> */}
+            <Button colorScheme={type==false?"teal":"red"} onClick={type==false?handleSignIn:handleSignOut}>
+           {type==false?"SignIn":"SignOut"}
             </Button>
-            <Button colorScheme="red" onClick={handleSignOut}>
+            {/* <Button colorScheme="red" onClick={handleSignOut}>
               Sign Out
-            </Button>
+            </Button> */}
           </VStack>
         </VStack>
       </Center>

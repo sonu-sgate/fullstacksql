@@ -77,7 +77,8 @@ const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${
 const formattedTime = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 // console.log(formattedTime,"sfs")
 
-const [existingdata]=await connection.promise().query(`SELECT * FROM attendencetable WHERE date='${formattedDate}'`)
+const [existingdata]=await connection.promise().query(`SELECT * FROM attendencetable WHERE date='${formattedDate}' AND userId=${req.body.userId}`)
+
 // console.log(existingdata,"existingdata")
 if(existingdata.length>0){
   connection.query(`UPDATE attendencetable SET signIn='${signIn}' , signInat='${formattedTime}' WHERE date='${formattedDate}'`,(error,results)=>{
@@ -162,7 +163,7 @@ connection.query(`UPDATE attendencetable SET signOut='${signOut}' , signOutat='$
 })
 
 }catch(err){
-  console.log(err,"error")
+  // console.log(err,"error")
   res.status(400).json({msg:"something going wrong"})
 }
 }else{
@@ -175,14 +176,22 @@ connection.query(`UPDATE attendencetable SET signOut='${signOut}' , signOutat='$
 empActivityrouter.get('/get',async(req,res)=>{
 const currentDate = new Date();
 // console.log("hijji")
+const {userId}=req.body
+// console.log(userId)
 const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
-try{
 const [data] = await connection.promise().query('SELECT * FROM attendencetable WHERE userId = ? AND date = ?', [req.body.userId, formattedDate]);
+if(data.length>0){
+try{
+
 
 res.status(200).json({msg:data[0]})
 }catch(err){
   // console.log(err)
   res.status(400).json({msg:"somthing going wrong"})
 }
+}else{
+res.status(200).json({msg:{}})
+}
+
 })
 module.exports={empActivityrouter}
