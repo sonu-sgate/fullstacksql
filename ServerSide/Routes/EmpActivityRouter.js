@@ -72,17 +72,20 @@ res.status(200).json({msg:data})
 empActivityrouter.post("/signIn",async(req,res)=>{
   const {signIn,signOut,userId}=req.body
 const currentDate = new Date();
-// console.log("hijji")
 const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
-// console.log(formattedDate,"formatteddate")
-// console.log(formattedDate,"");
-const [existingdata]=await connection.promise().query(`SELECT * FROM attendence table WHERE date='
-${formattedDate}'`)
-if(existingdata){
-  connection.query(`UPDATE attendencetable SET signIn='${signIn}' WHERE date='${date}'`,(error,results)=>{
-    
+
+const [existingdata]=await connection.promise().query(`SELECT * FROM attendencetable WHERE date='${formattedDate}'`)
+console.log(existingdata,"existingdata")
+if(existingdata.length>0){
+  connection.query(`UPDATE attendencetable SET signIn='${signIn}' WHERE date='${formattedDate}'`,(error,results)=>{
+    if(error){
+      res.status(400).json({msg:"Not able to signIn"})
+    }else{
+      res.status(200).json({msg:"SignIn Successfully"})
+    }
   })
 }
+else{
 try{
 connection.query(`Insert INTO attendencetable (userId,signIn,signOut,date) VALUES (?,?,?,?)`,[userId,signIn,signOut,formattedDate],(error,results)=>{
   if(error){
@@ -97,6 +100,8 @@ connection.query(`Insert INTO attendencetable (userId,signIn,signOut,date) VALUE
 // res.status(200).json({msg:"successfully"})
 }catch(err){
   res.status(400).json({msg:"Something going wrong"})
+}
+
 }
 
 
