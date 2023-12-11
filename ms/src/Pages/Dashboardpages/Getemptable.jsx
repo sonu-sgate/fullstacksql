@@ -1,6 +1,6 @@
 // ResponsiveTable.js
 import React from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td, chakra, Box, Tooltip,Image, Avatar } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, chakra, Box, Tooltip,Image, Avatar, Center } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import CatDeletedialoge from './Catdeletemodel';
@@ -11,7 +11,7 @@ const MotionBox = chakra(motion.div);
 
 const EmpTable = ({ data }) => {
     const location=useLocation()
-
+// console.log(data,"emptabledata")
   return (
     <Box>
       <MotionBox
@@ -45,7 +45,8 @@ const EmpTable = ({ data }) => {
               <Td>{emp.address&&emp.address.substring(0, 10)}...</Td>
               <Td><Avatar src={`${api}/Images/`+emp.image}/></Td>
               {/* <Td></Td> */}
-              <Td><Link to={`${location.pathname}/${emp.id}`}>More</Link></Td>
+              {emp.id}
+              <Td><Link to={`${location.pathname}/${emp.empid}`}>More</Link></Td>
 
               {/* <Td><EditIcon/></Td>
               <Td>
@@ -57,6 +58,7 @@ const EmpTable = ({ data }) => {
           ))}
         </Tbody>
       </MotionBox>
+     
     </Box>
   );
 };
