@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ChakraProvider, Box, Input, Button, Center, Heading, VStack } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
@@ -9,6 +9,9 @@ function Attendence() {
   const [employeeId, setEmployeeId] = useState('');
   const [location, setLocation] = useState('');
 
+useEffect(()=>{
+
+},[])
   const handleSignIn = async () => {
     try {
       // Use the geolocation API to get the user's location
@@ -43,7 +46,7 @@ console.log(fetchedLocation,"fetchedlocation")
 
           // Update the state with the fetched location
           setLocation(fetchedLocation);
-
+console.log("fetchedlocationsinout",fetchedLocation)
           // Send the sign-out request to the server
           await axios.post('http://localhost:3001/signout', { employeeId, location: fetchedLocation });
           alert('Employee signed out successfully.');

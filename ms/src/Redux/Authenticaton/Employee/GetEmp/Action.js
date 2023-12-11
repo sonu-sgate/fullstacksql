@@ -14,7 +14,7 @@ export const getempsidefailure=()=>{
 export const getempside=(dispatch)=>{
     dispatch(getempsiderequest())
     axios.get(`${api}/empactivity/getdata`).then((res)=>{
-        console.log('res',res)
+        // console.log('res',res)
         dispatch(getempsidesuccess(res.data))
     }).catch((err)=>{
         // console.log(err)
