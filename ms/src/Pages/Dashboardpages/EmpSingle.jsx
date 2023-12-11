@@ -18,6 +18,11 @@ import {
   List,
   ListItem,
   Center,
+  Table,
+  Thead,
+  Tr,
+  Td,
+  Tbody,
 } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { MdLocalShipping } from 'react-icons/md'
@@ -25,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getsingleemp } from '../../Redux/Admin/Employee/GetSingle/Action'
 import { useParams } from 'react-router-dom'
 import { api } from '../../Redux/Api/api'
+import { adminsideattendata } from '../../Redux/Admin/GetAttendence/Action'
 
 export default function EmpSingle() {
     const dispatch=useDispatch()
@@ -32,11 +38,17 @@ export default function EmpSingle() {
     const storedsingle=useSelector((state)=>state.getsingleempreducer)
     
     const {getsingleempisLoading,result,getsingleempisError}=storedsingle
+    const storedattendcedata = useSelector(
+      (state) => state.adminsideattenddatareducer
+    );
+    const { attenddata } = storedattendcedata;
+    // console.log(attenddata, "attendence data");
     useEffect(()=>{
         dispatch(getsingleemp(id))
+        dispatch(adminsideattendata(id))
     },[])
     // console.log(getsingleempisLoading,"islong")
-    console.log("result",result)
+    // console.log("result",result)
     if(getsingleempisLoading){
         return <Center><Heading>Loading...</Heading></Center>
     }else if(getsingleempisError){
@@ -156,6 +168,36 @@ export default function EmpSingle() {
           <Center>
             <Heading>Working Details</Heading>
           </Center>
+          <Table>
+            <Table>
+              <Thead>
+                <Tr>
+                  <Td>Date</Td>
+                  <Td>SignIN(location)</Td>
+                  <Td>SignOut(location)</Td>
+                  <Td>SignIn(at)</Td>
+                  <Td>SignOut(at)</Td>
+                  <Td>Totalwork</Td>
+                </Tr>
+              </Thead>
+              <Tbody>
+
+                {attenddata.length>=1&&attenddata.map((emp)=>
+                 <Tr>
+                   <Td>{emp.date}</Td>
+                   <Td>{emp.signIn}</Td>
+                   <Td>{emp.signOut}</Td>
+                   <Td>{emp.signInat}</Td>
+                   <Td>{emp.signOutat}</Td>
+                   <Td>{emp.totalworktime}</Td>
+                    </Tr>)
+          }
+               
+                 
+           
+              </Tbody>
+            </Table>
+          </Table>
         </Container>
       )}
     </>

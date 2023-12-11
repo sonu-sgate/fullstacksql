@@ -169,6 +169,20 @@ const [admins]=await connection.promise().query(query)
     res.status(200).json({msg:admins})
   }
 })
+
+// Route to get attendence details of employeee
+
+adminactivityRouter.get('/get/:id',async(req,res)=>{
+  const {id}=req.params
+  console.log(id)
+  try{
+const [data]=await connection.promise().query(`SELECT * FROM attendencetable WHERE userId=${id}`)
+res.status(200).json({msg:data})
+  }catch(err){
+    
+    res.status(400).json({msg:"something going wrong"})
+  }
+})
 // Route for admin logout
 adminactivityRouter.get('/adminlogout', async (req, res) => {
   try {
@@ -178,5 +192,6 @@ adminactivityRouter.get('/adminlogout', async (req, res) => {
     res.status(400).json({ msg: 'Failed to logout' });
   }
 });
+
 
 module.exports = { adminactivityRouter };

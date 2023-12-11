@@ -5,7 +5,7 @@ const initialdata={
     attenddataisError:false,
     attenddata:[]
 }
-export const adminsideattenddata=(state=initialdata,action)=>{
+export const adminsideattenddatareducer=(state=initialdata,action)=>{
     const {type,payload}=action
     switch(type){
         case adminsideattenddatareq:{
