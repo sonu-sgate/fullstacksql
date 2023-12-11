@@ -133,21 +133,29 @@ adminactivityRouter.get("/admins",async(req,res)=>{
   const {email,sortby,order,page,limit}=req.query
 
   let query='SELECT * FROM admin '
+  let query2='SELECT COUNT(id) FROM admin '
 if(email){
 query+=`WHERE email LIKE '%${email}%' `
+query2+=`WHERE email LIKE '%${email}%' `
 }
 // console.log(query)
 if(order&&sortby){
   query+=`ORDER BY ${sortby} ${order} `
+  query2+=`ORDER BY ${sortby} ${order} `
 }
+let totalpages=0
+
+  const [data]=await connection.promise().query(query2)
+  console.log(data,"data")
+  totalpages=Math.ceil(+(data[0]['COUNT(id)']/+limit))
+
   if(page&&limit){
     const OFFSET=(+page-1)*(+limit)
     query+=`LIMIT ${+limit} OFFSET ${+OFFSET} `
-    // const totalpage=0
-    const [totalcount]=await connection.promise().query('SELECT COUNT(id) FROM admin')
-    console.log(totalcount,"totalcount")
-    const totalpages=Math.ceil(+totalcount[0]['COUNT(id)']/+limit)
-    // console.log(totalpages,"totalpages")
+    query2+=`LIMIT ${+limit} OFFSET ${+OFFSET} `
+    
+
+    // console.log('totalpages',totalpages)
 const [admins]=await connection.promise().query(query)
   res.status(200).json({msg:admins,totalpages})
   try{
@@ -155,7 +163,7 @@ const [admins]=await connection.promise().query(query)
   }catch(err){
     res.status(400).json({msg:"Something going wrong"})
   }}else{
-    console.log(query,"query")
+    // console.log(query,"query")
     const [admins]=await connection.promise().query(query)
 
     res.status(200).json({msg:admins})

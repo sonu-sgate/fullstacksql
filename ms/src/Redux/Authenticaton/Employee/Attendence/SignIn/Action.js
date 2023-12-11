@@ -14,5 +14,6 @@ export const usersinginfailure=()=>{
 
 export const usersignin=(obj)=>(dispatch)=>{
     dispatch(usersigninrequest())
-    axios.post(`${api}/empactivity/signIn`,obj)
+    console.log(obj,"attendence data")
+    return axios.post(`${api}/empactivity/signIn`,obj)
 }

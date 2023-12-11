@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const { empRouter } = require('./Routes/EmplyoeeRoutes');
 const { empActivityrouter } = require('./Routes/EmpActivityRouter');
 const { empauth } = require('./Middleware/Empauth');
+const { chatapp } = require('./Routes/ChatAppRouter');
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -40,7 +41,7 @@ app.use(cookieParser());
 
 app.use(express.static('Public'));
 
-app.use("/adminside",adminactivityRouter);
+app.use("/adminside",auth,adminactivityRouter);
 app.use("/empside",empRouter);
 app.use('/empactivity',empauth,  empActivityrouter);
 // io.use(empauth)
@@ -58,7 +59,7 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
   });
 });
-
+app.use('/chat',empauth,chatapp(io))
 httpServer.listen(3000, async (req, res) => {
   try {
     connection.connect((error) => {

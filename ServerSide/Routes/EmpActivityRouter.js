@@ -1,7 +1,7 @@
 const express=require('express')
 const nodemailer = require("nodemailer");
 const { connection } = require('../Connection/connection')
-const { join } = require('path')
+const { join, format } = require('path')
 const empActivityrouter=express.Router()
 empActivityrouter.get("/profile",async(req,res)=>{
     const {email}=req.body
@@ -23,7 +23,7 @@ empActivityrouter.post("/report",async(req,res)=>{
       service:"gmail",
         auth: {
           // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-          user: "sonu992000parjapat@gmail.com",
+  user: "sonu992000parjapat@gmail.com",
           pass: "djxtqalkcgbjopoy",
         },
       });
@@ -65,6 +65,61 @@ res.status(200).json({msg:data})
     res.status(400).json({msg:"something going wrong"})
   }
 })
-// payment system..........................................
 
+// attendence system ....................................................
+
+// signiN...........
+empActivityrouter.post("/signIn",async(req,res)=>{
+  const {signIn,signOut,userId}=req.body
+const currentDate = new Date();
+// console.log("hijji")
+const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+// console.log(formattedDate,"formatteddate")
+// console.log(formattedDate,"");
+const [existingdata]=await connection.promise().query(`SELECT * FROM attendence table WHERE date='
+${formattedDate}'`)
+if(existingdata){
+  connection.query(`UPDATE attendencetable SET signIn='${signIn}' WHERE date='${date}'`,(error,results)=>{
+    
+  })
+}
+try{
+connection.query(`Insert INTO attendencetable (userId,signIn,signOut,date) VALUES (?,?,?,?)`,[userId,signIn,signOut,formattedDate],(error,results)=>{
+  if(error){
+    // console.log(error)
+    res.status(400).json({msg:"Something going wrong"})
+  }else{
+    // console.log("done")
+    res.status(200).json({msg:"SignIn Successfully"})
+  }
+})
+
+// res.status(200).json({msg:"successfully"})
+}catch(err){
+  res.status(400).json({msg:"Something going wrong"})
+}
+
+
+})
+
+// signOut,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+empActivityrouter.patch("/signOut/:id",async(req,res)=>{
+const currentDate = new Date();
+// console.log("hijji")
+const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+
+const [existingdata]=await connection.promise().query(`SELECT * FROM attendencetable WHERE date='${formattedDate}'`)
+if(existingdata){
+try{
+connection.query(`UPDATE attendencetable SET signOut='${signOut} WHERE id=${req.params}'`)
+}catch(err){
+  res.status(400).json({msg:"something going wrong"})
+}
+}else{
+  res.status(400).json({msg:"Please signIn first"})
+}
+
+
+
+})
 module.exports={empActivityrouter}

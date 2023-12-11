@@ -17,6 +17,8 @@ import { empprofilereducer } from "../Authenticaton/Employee/empProfile/Reducer"
 import { reportreducer } from "../Authenticaton/Employee/Report/Reducer";
 import { getempsidereducer } from "../Authenticaton/Employee/GetEmp/Reducer";
 import { getadmindatareducer } from "../Admin/GetAdmins/Reducer";
+import { usersignoutreducer } from "../Authenticaton/Employee/Attendence/SignOut/Reducer";
+import { getattendreducer } from "../Authenticaton/Employee/Attendence/Get/Reducer";
 const rootreducers=combineReducers({adminloginreducer,adminsignupreducer,addcatreducer,getcatreducer,
- reportreducer,getempsidereducer,getadmindatareducer,  addempreducer,getempreducer,getsingleempreducer,getcountreducer,amdinlogoutreducer,emploginreducer,empprofilereducer})
+ reportreducer,getempsidereducer,getadmindatareducer,usersignoutreducer,getattendreducer,  addempreducer,getempreducer,getsingleempreducer,getcountreducer,amdinlogoutreducer,emploginreducer,empprofilereducer})
 export const store=legacy_createStore(rootreducers,applyMiddleware(thunk))
