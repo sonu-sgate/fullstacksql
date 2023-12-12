@@ -6,6 +6,7 @@ import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import CatDeletedialoge from './Catdeletemodel';
 import { Link, useLocation } from 'react-router-dom';
 import { api } from '../../Redux/Api/api';
+import MapContainer from './MapContainer';
 
 const MotionBox = chakra(motion.div);
 
@@ -58,7 +59,7 @@ const EmpTable = ({ data }) => {
           ))}
         </Tbody>
       </MotionBox>
-     
+     <MapContainer/>
     </Box>
   );
 };
