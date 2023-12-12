@@ -60,15 +60,18 @@ adminRouter.post("/adminsignup", async (req, res) => {
             await connection.promise().beginTransaction()
           // Insert new user data into the database
           const query = `INSERT INTO admin (email,password) VALUES ('${email}','${hash}')`;
-          connection.query(query, ((error) => {
+          connection.query(query, (async(error) => {
             if (error) {
+                await connection.promise().rollback()
               res.status(400).json({ msg: "Error In Signup" });
             } else {
+                await connection.promise().commit()
               res.status(200).json({ msg: "Signup Successfully" });
             }
           }));
         } catch (err) {
-          res.status(400).json({ msg: "Error In Signup" });
+ await connection.promise().rollback()
+          res.status(500).json({ msg: "Error In Signup" });
         }
       }
     });
