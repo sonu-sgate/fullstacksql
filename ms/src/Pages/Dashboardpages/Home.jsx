@@ -26,6 +26,7 @@ import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-do
 import { getadmindata } from '../../Redux/Admin/GetAdmins/Action';
 import AdminFilter from './adminpagination/AdminFilter';
 import Adminpagination from './adminpagination/AdminPagi';
+import InitialFocus from './AddAdminModel';
 
 // Hard-coded data (replace with your actual data)
 const adminCount = 0;
@@ -79,13 +80,13 @@ dispatch(getadmindata(params))
       <Heading textAlign="center" my={8}>
         Dashboard
       </Heading>
-      <Link to="/adminsignup">
+      {/* <Link to="/adminsignup">
         <Button>
           ADD ADMIN
           <AddIcon />
         </Button>
-      </Link>
-
+      </Link> */}
+<InitialFocus/>
       <Box
         display="grid"
         gridTemplateColumns="repeat(3,1fr)"

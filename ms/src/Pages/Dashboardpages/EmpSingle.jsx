@@ -31,6 +31,7 @@ import { getsingleemp } from '../../Redux/Admin/Employee/GetSingle/Action'
 import { useParams } from 'react-router-dom'
 import { api } from '../../Redux/Api/api'
 import { adminsideattendata } from '../../Redux/Admin/GetAttendence/Action'
+import MapContainer from './MapContainer'
 
 export default function EmpSingle() {
     const dispatch=useDispatch()
@@ -47,6 +48,12 @@ export default function EmpSingle() {
         dispatch(getsingleemp(id))
         dispatch(adminsideattendata(id))
     },[])
+    const locations = [
+      [18.5204303, 73.8567437], // Pune, India
+      [37.7749, -122.4194], // San Francisco, USA
+      [-33.8688, 151.2093], // Sydney, Australia
+    ];
+
     // console.log(getsingleempisLoading,"islong")
     // console.log("result",result)
     if(getsingleempisLoading){
@@ -181,23 +188,32 @@ export default function EmpSingle() {
                 </Tr>
               </Thead>
               <Tbody>
-
-                {attenddata.length>=1&&attenddata.map((emp)=>
-                 <Tr>
-                   <Td>{emp.date}</Td>
-                   <Td>{emp.signIn}</Td>
-                   <Td>{emp.signOut}</Td>
-                   <Td>{emp.signInat}</Td>
-                   <Td>{emp.signOutat}</Td>
-                   <Td>{emp.totalworktime}</Td>
-                    </Tr>)
-          }
-               
-                 
-           
+                {attenddata.length >= 1 &&
+                  attenddata.map((emp) => (
+                    <Tr>
+                      <Td>{emp.date}</Td>
+                      <Td>{emp.signIn}</Td>
+                      <Td>{emp.signOut}</Td>
+                      <Td>{emp.signInat}</Td>
+                      <Td>{emp.signOutat}</Td>
+                      <Td>{emp.totalworktime}</Td>
+                    </Tr>
+                  ))}
               </Tbody>
             </Table>
           </Table>
+          <Center>
+            <Heading>Maped Locations</Heading>
+          </Center>
+          {attenddata.length>0&&
+           <MapContainer
+        googleMapURL={`https://maps.googleapis.com/maps/api/js?key=AIzaSyCwNw-ckLyiqE_rn-IO3VY-3cTBYxPJfug&v=3.exp&libraries=geometry,drawing,places`}
+        loadingElement={<div style={{ height: "100%" }} />}
+        containerElement={<div style={{ height: "400px" }} />}
+        mapElement={<div style={{ height: "100%" }} />}
+        locations={attenddata}
+      />
+      }
         </Container>
       )}
     </>

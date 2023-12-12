@@ -8,13 +8,15 @@ const adminRouter=express.Router()
 adminRouter.post("/adminlogin",async(req,res)=>{
 // console.log(req.body)
 const {email,password}=req.body
+
+// we needed whole data of user to check
 const query=`SELECT * FROM admin WHERE email="${email}"`
+
 const [data]=await connection.promise().query(query)
-// console.log(data)
-// console.log(data,"data")
-// console.log("data",data)
+
 if(data.length>=1){
    try{
+    await connection.promise().beginTransaction()
     bcrypt.compare(password, data[0].password, function(err, result) {
        if(result){
         var token = jwt.sign({ userId:data[0].empid,role:'admin',email:data[0].email }, 'ms',{expiresIn:'1d'})
@@ -24,10 +26,13 @@ if(data.length>=1){
         res.status(400).json({msg:"Password Mismatch"})
        }
     });
+    await connection.promise().commit()
    }catch(err){
-    res.status(400).json({msg:"something going wrong"})
+    await connection.promise().rollback()
+    res.status(500).json({msg:"something going wrong"})
    }
 }else{
+await connection.promise.rollback()
     res.status(400).json({msg:"USER IS NOT REGISTERED"})
 }
 // res.status(200).json({msg:data})
