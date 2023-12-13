@@ -93,7 +93,8 @@ const navigate=useNavigate()
     setShowPassword((prev) => !prev);
   };
 const googleAuth=()=>{
-window.open(`${api}/auth/google/callback`, "_self");
+window.open(`${api}/googleauth/google/callback`, "_self");
+
 }
   return (
     <Flex

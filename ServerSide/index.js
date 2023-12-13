@@ -18,10 +18,12 @@ const passportSetup=require("./Routes/Passport");
 const { authRouter } = require('./Middleware/GoogleAuth');
 const app = express();
 app.use(cookieSession({
-  "name":"session",
-  "keys":["cyberwolve"],
-  maxAge:"24*60*60*100"
-}))
+  name: "session",
+  keys: ["cyberwolve"],
+  // callbackURL: 'http://localhost:4000/auth/google/callback',
+  scope: ['email', 'profile'],
+  // maxAge: 24 * 60 * 60 * 1000,  // milliseconds
+}));
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
