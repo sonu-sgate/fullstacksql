@@ -62,7 +62,7 @@ const [data]=await connection.promise().query('SELECT * FROM employ INNER JOIN c
 // console.log(data)
 res.status(200).json({msg:data})
   }catch(err){
-    res.status(400).json({msg:"something going wrong"})
+    res.status(500).json({msg:"something going wrong"})
   }
 })
 
@@ -81,6 +81,8 @@ const [existingdata]=await connection.promise().query(`SELECT * FROM attendencet
 
 // console.log(existingdata,"existingdata")
 if(existingdata.length>0){
+ try{
+
   connection.query(`UPDATE attendencetable SET signIn='${signIn}' , signInat='${formattedTime}' WHERE date='${formattedDate}'`,(error,results)=>{
     if(error){
       res.status(400).json({msg:"Not able to signIn"})
@@ -88,22 +90,28 @@ if(existingdata.length>0){
       res.status(200).json({msg:"SignIn Successfully"})
     }
   })
-}
+}catch(err){
+  res.status(500).json({msg:"Something going wrong"})
+}}
 else{
 try{
-connection.query(`Insert INTO attendencetable (userId,signIn,signOut,date,signInat) VALUES (?,?,?,?,?)`,[userId,signIn,signOut,formattedDate,formattedTime],(error,results)=>{
+  await connection.promise().beginTransaction()
+connection.query(`Insert INTO attendencetable (userId,signIn,signOut,date,signInat) VALUES (?,?,?,?,?)`,[userId,signIn,signOut,formattedDate,formattedTime],async(error,results)=>{
   if(error){
     // console.log(error)
+    await connection.promise().rollback()
     res.status(400).json({msg:"Something going wrong"})
   }else{
     // console.log("done")
+    await connection.promise().commit()
     res.status(200).json({msg:"SignIn Successfully"})
   }
 })
 
 // res.status(200).json({msg:"successfully"})
 }catch(err){
-  res.status(400).json({msg:"Something going wrong"})
+  await connection.promise().rollback()
+  res.status(500).json({msg:"Something going wrong"})
 }
 
 }
@@ -136,9 +144,6 @@ const convertTimeStringToDate = (timeString) => {
 
 
 
-// console.log(`User logged in at ${loginTimeString} and logged out at ${logoutTimeString}.`);
-// console.log(`User was on the site for ${hours} hours and ${minutes} minutes.`);
-
 if(existingdata.length>0){
   // Convert login and logout time strings to Date objects
 const loginTime = convertTimeStringToDate(existingdata[0].signInat);
@@ -153,9 +158,10 @@ const timeDifferenceMin = Math.floor(timeDifferenceMs / (1000 * 60));
 const hours = Math.floor(timeDifferenceMin / 60);
 const minutes = timeDifferenceMin % 60;
 try{
-connection.query(`UPDATE attendencetable SET signOut='${signOut}' , signOutat='${formattedTime}' ,totalworktime='${hours} hours ${minutes} minutes' WHERE id=${id}`,(error,results)=>{
+  await connection.promise().beginTransaction()
+connection.query(`UPDATE attendencetable SET signOut='${signOut}' , signOutat='${formattedTime}' ,totalworktime='${hours} hours ${minutes} minutes' WHERE id=${id}`,async(error,results)=>{
   if(error){
-    // console.log(error)
+await connection.promise().rollback()
     res.status(400).json({msg:"something going wrong"})
   }else{
     res.status(200).json({msg:"SignOut Successfully"})

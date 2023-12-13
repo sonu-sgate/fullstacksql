@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
+const passport=require('passport')
+const cookieSession=require('cookie-session')
 // const bodyParser=require("body")
 const { Server } = require('socket.io');
 const { connection } = require('./Connection/connection');
@@ -12,24 +14,32 @@ const { empRouter } = require('./Routes/EmplyoeeRoutes');
 const { empActivityrouter } = require('./Routes/EmpActivityRouter');
 const { empauth } = require('./Middleware/Empauth');
 const { chatapp } = require('./Routes/ChatAppRouter');
-
+const passportSetup=require("./Routes/Passport");
+const { authRouter } = require('./Middleware/GoogleAuth');
 const app = express();
+app.use(cookieSession({
+  "name":"session",
+  "keys":["cyberwolve"],
+  maxAge:"24*60*60*100"
+}))
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:5174',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'PATCH'],
     credentials: true,
   },
 });
 
+
 app.use(express.static('build'));
 
 app.use(cors({
-  origin: ['http://localhost:5174'],
+  origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'PATCH'],
   credentials: true,
 }));
+app.use('/googleauth',authRouter)
 app.use(express.json());
 const users = {};
 
@@ -60,7 +70,7 @@ io.on('connection', (socket) => {
   });
 });
 app.use('/chat',empauth,chatapp(io))
-httpServer.listen(3000, async (req, res) => {
+httpServer.listen(4000, async (req, res) => {
   try {
     connection.connect((error) => {
       if (error) {
@@ -68,7 +78,7 @@ httpServer.listen(3000, async (req, res) => {
       } else {
         console.log('Connected to the database');
       }
-      console.log('Server is running on port 3000');
+      console.log('Server is running on port 4000');
     });
   } catch (error) {
     console.log('Something went wrong:', error);

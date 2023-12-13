@@ -76,6 +76,7 @@ adminRouter.post("/adminsignup", async (req, res) => {
       }
     });
     }catch(err){
+      await connection.promise().rollback()
         res.status(500).json({msg:"Server Error Is Going"})
     }
   

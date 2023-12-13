@@ -11,15 +11,18 @@ chatRouter.post("/postchat",async(req,res)=>{
 let newarr=[]
 newarr.push(message)
 try{
- connection.query("INSERT INTO chattable (userId,messages,To",[userId,newarr,To],(error,results)=>{
+    connection.promise().beginTransaction()
+ connection.query("INSERT INTO chattable (userId,messages,To",[userId,newarr,To],async(error,results)=>{
     if(error){
         res.status(400).json({msg:"Something going wrong"})
     }else{
+        await connection.promise().commit()
         res.status(200).json({msg:"message send successfully"})
     }
  })
 }catch(err){
-    res.status(400).json({msg:"Something going wrong"})
+await connection.promise().rollback()
+    res.status(500).json({msg:"Something going wrong"})
 }
     
 })

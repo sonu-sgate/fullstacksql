@@ -12,14 +12,18 @@ adminactivityRouter.post('/addcat', async (req, res) => {
   const { name } = req.body;
   const query = `INSERT INTO category (categoryname) VALUES ('${name}')`;
   try {
-    connection.query(query, (error) => {
+    await connection.promise().beginTransaction()
+    connection.query(query, async(error) => {
       if (error) {
+        await connection.promise().rollback()
         res.status(400).json({ msg: 'Error adding Category' });
       } else {
+        await connection.promise().commit()
         res.status(200).json({ msg: 'Category added successfully' });
       }
     });
   } catch (err) {
+    await connection.promise().rollback()
     res.status(400).json({ msg: 'Error in adding Category' });
   }
 });
@@ -28,9 +32,11 @@ adminactivityRouter.post('/addcat', async (req, res) => {
 adminactivityRouter.get('/getcat', async (req, res) => {
   const query = 'SELECT * FROM category';
   try {
+    await connection.promise().commit()
     const [data] = await connection.promise().query(query);
     res.status(200).json({ msg: data });
   } catch (err) {
+    await connection.promise().rollback()
     res.status(400).json({ msg: 'Something went wrong' });
   }
 });
@@ -50,18 +56,21 @@ const upload = multer({ storage: storage });
 // Route to add a new employee with image upload
 adminactivityRouter.post('/addemployee', upload.single('image'), async (req, res) => {
   try {
+    await connection.promise().beginTransaction()
     const { name, email, password, category_id, address, salary } = req.body;
 
     // Check if the email already exists
     const [result] = await connection.promise().query('SELECT * FROM employ WHERE email=?', [email]);
     if (result.length > 0) {
+      await connection.promise().rollback()
       return res.status(400).json({ msg: 'Employee is already present' });
     }
 
     // Hash the password
-    bcrypt.hash(password, 5, function (err, hash) {
+    bcrypt.hash(password, 5, async (err, hash)=> {
       if (err) {
         // console.log(err);
+             await connection.promise().rollback()
         return res.status(400).json({ msg: 'Error in hashing password' });
       }
 
@@ -71,15 +80,18 @@ adminactivityRouter.post('/addemployee', upload.single('image'), async (req, res
       const values = [name, email, hash, +salary, address, category_id, req.file.filename];
 
       // Execute the query
-      connection.query(query, values, (error) => {
+      connection.query(query, values, async(error) => {
         if (error) {
-          return res.status(400).json({ msg: 'Something went wrong' });
+          await connection.promise().rollback()
+          return res.status(400).json({ msg: 'Not able to add employee' });
         } else {
+          await connection.promise().commit()
           return res.status(200).json({ msg: 'Employee added successfully' });
         }
       });
     });
   } catch (err) {
+         await connection.promise().rollback()
     return res.status(500).json({ msg: 'Internal server error' });
   }
 });
@@ -88,10 +100,12 @@ adminactivityRouter.post('/addemployee', upload.single('image'), async (req, res
 adminactivityRouter.get('/getemp', async (req, res) => {
   const query = 'SELECT * FROM employ';
   try {
+    // await connection.promise().beginTransaction()
     const [data] = await connection.promise().query(query);
     res.status(200).json({ msg: data });
   } catch (err) {
-    res.status(400).json({ msg: 'Something went wrong' });
+         await connection.promise().rollback()
+    res.status(500).json({ msg: 'Something went wrong' });
   }
 });
 
@@ -103,7 +117,7 @@ adminactivityRouter.get('/getsingleemp/:id', async (req, res) => {
     const [data] = await connection.promise().query(query);
     res.status(200).json({ msg: data });
   } catch (err) {
-    res.status(400).json({ msg: 'Something went wrong' });
+    res.status(500).json({ msg: 'Something went wrong' });
   }
 });
 
@@ -125,7 +139,7 @@ adminactivityRouter.get('/getcount', async (req, res) => {
       admins,
     });
   } catch (err) {
-    res.status(400).json({ msg: 'Something went wrong' });
+    res.status(500).json({ msg: 'Something went wrong' });
   }
 });
 // route to get admins.............
@@ -174,7 +188,7 @@ const [admins]=await connection.promise().query(query)
 
 adminactivityRouter.get('/get/:id',async(req,res)=>{
   const {id}=req.params
-  console.log(id)
+  // console.log(id)
   try{
 const [data]=await connection.promise().query(`SELECT * FROM attendencetable WHERE userId=${id}`)
 res.status(200).json({msg:data})
