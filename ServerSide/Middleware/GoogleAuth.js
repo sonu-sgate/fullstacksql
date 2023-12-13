@@ -12,16 +12,7 @@ if(req.user){
 authRouter.get('/login/failed',async(req,res)=>{
     res.status(401).json({error:true,msg:"Login Failed"})
 })
-app.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
-
-// authRouter.get("/google/callback",passport.authenticate("google",["email","profile"]))
-
-// authRouter.get('/google/callback', passport.authenticate('google', { failureRedirect: '/auth/login/failed' }),
-//   (req, res) => {
-//     res.redirect('/auth/login/success');
-//   }
-// );
-
+authRouter.get("/google/callback",passport.authenticate("google",{"scope":["email","profile"]}))
 
 
 authRouter.get('/logout',async(req,res)=>{

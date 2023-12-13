@@ -20,9 +20,9 @@ const app = express();
 app.use(cookieSession({
   name: "session",
   keys: ["cyberwolve"],
-  // callbackURL: 'http://localhost:4000/auth/google/callback',
+   callbackURL: 'http://localhost:4000/auth/google/callback',
   scope: ['email', 'profile'],
-  // maxAge: 24 * 60 * 60 * 1000,  // milliseconds
+
 }));
 const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
@@ -46,9 +46,7 @@ app.use(express.json());
 const users = {};
 
 app.use("/auth",adminRouter);
-// for urlpurpose
-// app.use(bodyParser.urlencoded({ extended: true }));
-// Important to get static data (images)
+
 app.use(cookieParser());
 
 app.use(express.static('Public'));
