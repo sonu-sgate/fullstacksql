@@ -34,7 +34,7 @@ import EmpTable from "../EmpTable";
 
 const MotionBox = motion(Box);
 
-const socket = io("http://localhost:3000"); // Replace with your server URL
+const socket = io("http://localhost:4000"); // Replace with your server URL
 
 const ChatApp = () => {
   const [messages, setMessages] = useState([]);

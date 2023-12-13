@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { adminlogin, adminloginfailure, adminloginsuccess } from '../Redux/Authenticaton/Admin/Login/Action';
 import axios from 'axios';
 import { emplogin, emploginfailure, emploginsuccess } from '../Redux/Authenticaton/Employee/Login/Action';
+import { api } from '../Redux/Api/api';
 
 const initialData = {
   email: '',
@@ -91,30 +92,39 @@ const navigate=useNavigate()
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
   };
-
+const googleAuth=()=>{
+window.open(`${api}/auth/google/callback`, "_self");
+}
   return (
     <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-        <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Sign in to your account</Heading>
-          <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool <Text color={'blue.400'}>features</Text> ✌️
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bg={useColorModeValue("gray.50", "gray.800")}
+    >
+      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+        <Stack align={"center"}>
+          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
+          <Text fontSize={"lg"} color={"gray.600"}>
+            to enjoy all of our cool <Text color={"blue.400"}>features</Text> ✌️
           </Text>
         </Stack>
         <form onSubmit={handleSubmit}>
           <Box
-            rounded={'lg'}
-            bg={useColorModeValue('white', 'gray.700')}
-            boxShadow={'lg'}
-            p={8}>
+            rounded={"lg"}
+            bg={useColorModeValue("white", "gray.700")}
+            boxShadow={"lg"}
+            p={8}
+          >
             <Stack spacing={4}>
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
-                <Input name="email" onChange={handleChange} value={loginData.email} type="email" />
+                <Input
+                  name="email"
+                  onChange={handleChange}
+                  value={loginData.email}
+                  type="email"
+                />
               </FormControl>
               <FormControl id="password">
                 <FormLabel>Password</FormLabel>
@@ -123,10 +133,14 @@ const navigate=useNavigate()
                     name="password"
                     onChange={handleChange}
                     value={loginData.password}
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                   />
                   <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleTogglePassword}>
+                    <Button
+                      h="1.75rem"
+                      size="sm"
+                      onClick={handleTogglePassword}
+                    >
                       {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
                     </Button>
                   </InputRightElement>
@@ -135,12 +149,26 @@ const navigate=useNavigate()
               <Stack spacing={10}>
                 <Button
                   type="submit"
-                  bg={'blue.400'}
-                  color={'white'}
+                  bg={"blue.400"}
+                  color={"white"}
                   _hover={{
-                    bg: 'blue.500',
-                  }}>
+                    bg: "blue.500",
+                  }}
+                >
                   Sign in
+                </Button>
+              </Stack>
+              <Stack spacing={10}>
+                <Button
+                  // type="submit"
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                  onClick={googleAuth}
+                >
+                  Sign in with Google
                 </Button>
               </Stack>
               {/* <Link to="/adminsignup">Not a Registered User? <Button>Click Here!</Button></Link> */}
