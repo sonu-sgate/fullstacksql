@@ -60,7 +60,7 @@ const upload = multer({ storage: storage });
 
 adminRouter.post("/adminsignup",upload.single("image"), async (req, res) => {
   const {name, email, password } = req.body;
-
+// console.log(req.file.filename,"filenmae")
   // Check if the user is already registered
   const query = `SELECT email FROM admin WHERE email='${email}'`;
   const [singledata] = await connection.promise().query(query);
@@ -70,13 +70,14 @@ adminRouter.post("/adminsignup",upload.single("image"), async (req, res) => {
     res.status(400).json({ msg: "Already Registered" });
   } else {
     try{
+        console.log(req.file.filename,"filename",)
   bcrypt.hash(password, 5, async (err, hash) => {
       if (hash) {
         try {
             await connection.promise().beginTransaction()
           // Insert new user data into the database
           let query=""
-          console.log(req.file.filename,"filename")
+        
          if(req.file.filename){
 query = `INSERT INTO admin (email,password,image,name) VALUES ('${email}','${hash}','${req.file.filename}','${name}')`;
          }
@@ -95,7 +96,7 @@ query = `INSERT INTO admin (email,password,image,name) VALUES ('${email}','${has
           }));
         } catch (err) {
  await connection.promise().rollback()
- console.log(err)
+//  console.log(err)
           res.status(500).json({ msg: "Error In Signup" });
         }
       }
