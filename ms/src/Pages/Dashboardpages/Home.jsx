@@ -54,7 +54,7 @@ const Home = () => {
   // console.log(admincount,"admincount")
  
   const {getadmindataisLoading,getadmindataisError,admindata,totalpages}=useSelector((state)=>state.getadmindatareducer)
-  console.log(admindata,'admindata')
+  // console.log(admindata,'admindata')
   const onPageChange=(page)=>{
     setCurrentPage(page)
     setSearchParams(currentPage)
