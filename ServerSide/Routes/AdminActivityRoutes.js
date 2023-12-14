@@ -160,7 +160,7 @@ if(order&&sortby){
 let totalpages=0
 
   const [data]=await connection.promise().query(query2)
-  console.log(data,"data")
+  // console.log(data,"data")
   totalpages=Math.ceil(+(data[0]['COUNT(id)']/+limit))
 
   if(page&&limit){

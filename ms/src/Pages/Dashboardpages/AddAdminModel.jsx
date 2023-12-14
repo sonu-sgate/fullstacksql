@@ -20,7 +20,7 @@ import {
   InputRightElement,
   useDisclosure
 } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import { AddIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { adminsignup,adminsignupsuccess,adminsignupfailure } from "../../Redux/Authenticaton/Admin/Signup/Action";
@@ -34,6 +34,7 @@ const initialData = {
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [signupdata, setSignupdata] = useState(initialData);
+  const [image,setImage]=useState("")
    const [error, setError] = useState("");
   
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -63,8 +64,18 @@ export default function SignUp() {
         duration:3000
     })
    }else{
+const newdata=new FormData()
+const {name,email,password}=signupdata
+// console.log(name,email,password)
 
-    dispatch(adminsignup(signupdata))
+
+newdata.append("email",email)
+newdata.append('password',password)
+newdata.append("name", name);
+image&&newdata.append("image",image)
+// console.log(newdata,"newdata")
+
+    dispatch(adminsignup(newdata))
       .then((res) => {
         dispatch(adminsignupsuccess());
         toast({
@@ -73,7 +84,7 @@ export default function SignUp() {
           status: "success",
           duration: 3000,
         });
-  onClose()
+  // onClose()
     setSignupdata(initialData)
         // navigate("/adminlogin");
       })
@@ -99,6 +110,10 @@ export default function SignUp() {
       setError("");
     }
   };
+const handleImage=(e)=>{
+// console.log(e.target.files)
+setImage(e.target.files[0])
+}
 
 
   return (
@@ -126,7 +141,18 @@ export default function SignUp() {
                 type="text"
               />
             </FormControl>
-
+            <FormControl >
+              <FormLabel>
+                profile
+              </FormLabel>
+              <Input
+                name="profile"
+                onChange={handleImage}
+                // value={image}
+                placeholder={"Profile"}
+                type="file"
+              />
+            </FormControl>
             <FormControl id="email" mt={4} isInvalid={error} isRequired>
               <FormLabel>
                 Email address

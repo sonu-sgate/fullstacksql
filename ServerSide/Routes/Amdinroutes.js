@@ -2,7 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { connection } = require('../Connection/connection');
-
+const multer = require('multer');
+const path=require("path")
 const adminRouter = express.Router();
 
 // Admin Login
@@ -42,11 +43,26 @@ adminRouter.post("/adminlogin", async (req, res) => {
 });
 
 // Admin Signup
-adminRouter.post("/adminsignup", async (req, res) => {
-  const { email, password } = req.body;
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'Admin/Images'); // Set your destination folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
+
+
+
+adminRouter.post("/adminsignup",upload.single("image"), async (req, res) => {
+  const {name, email, password } = req.body;
 
   // Check if the user is already registered
-  const query = `SELECT * FROM admin WHERE email='${email}'`;
+  const query = `SELECT email FROM admin WHERE email='${email}'`;
   const [singledata] = await connection.promise().query(query);
 
   if (singledata.length > 0) {
@@ -59,10 +75,18 @@ adminRouter.post("/adminsignup", async (req, res) => {
         try {
             await connection.promise().beginTransaction()
           // Insert new user data into the database
-          const query = `INSERT INTO admin (email,password) VALUES ('${email}','${hash}')`;
+          let query=""
+          console.log(req.file.filename,"filename")
+         if(req.file.filename){
+query = `INSERT INTO admin (email,password,image,name) VALUES ('${email}','${hash}','${req.file.filename}','${name}')`;
+         }
+         else{
+
+         query = `INSERT INTO admin (email,password,name) VALUES ('${email}','${hash}','${name}')`;}
           connection.query(query, (async(error) => {
             if (error) {
                 await connection.promise().rollback()
+                // console.log(error,"error")
               res.status(400).json({ msg: "Error In Signup" });
             } else {
                 await connection.promise().commit()
@@ -71,6 +95,7 @@ adminRouter.post("/adminsignup", async (req, res) => {
           }));
         } catch (err) {
  await connection.promise().rollback()
+ console.log(err)
           res.status(500).json({ msg: "Error In Signup" });
         }
       }

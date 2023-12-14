@@ -75,7 +75,7 @@ const Addemployee = ({handleempreq}) => {
       formData.append('salary', salary);
       formData.append('category_id', category_id);
       formData.append('image', image);
-
+// console.log(formData,"formdata")
       dispatch(addemp(formData))
         .then((res) => {
           dispatch(addempsuccess());
