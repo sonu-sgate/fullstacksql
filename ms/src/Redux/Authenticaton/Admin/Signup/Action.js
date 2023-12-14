@@ -13,5 +13,5 @@ export const adminsignupfailure=()=>{
 }
 export const adminsignup=(obj)=>(dispatch)=>{
     dispatch(adminsignuprequest())
-    return axios.post(`${api}/auth/adminsignup`,obj)
+    return axios.post(`${api}/adminauth/adminsignup`,obj)
 }

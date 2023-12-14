@@ -12,7 +12,7 @@ if(req.user){
 authRouter.get('/login/failed',async(req,res)=>{
     res.status(401).json({error:true,msg:"Login Failed"})
 })
-authRouter.get("/google/callback",passport.authenticate("google",{"scope":["email","profile"]}))
+authRouter.get("/google/callback", passport.authenticate("google", {"scope": ["email", "profile"]}));
 
 
 authRouter.get('/logout',async(req,res)=>{

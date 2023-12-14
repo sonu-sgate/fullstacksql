@@ -16,7 +16,7 @@ export const adminlogin=(obj)=>(dispatch)=>{
     console.log(location,"actionlocation")
     dispatch(adminloginrequest())
     if(location=="/adminlogin"){
-    return axios.post(`${api}/auth/adminlogin`,obj)}
+    return axios.post(`${api}/adminauth/adminlogin`,obj)}
    if(location=="/employlogin"){
         return axios.post(`${api}/empside/login`,obj)
     }

@@ -20,7 +20,7 @@ const app = express();
 app.use(cookieSession({
   name: "session",
   keys: ["cyberwolve"],
-   callbackURL: 'http://localhost:4000/auth/google/callback',
+   callbackURL: 'http://localhost:8000/auth/google/callback',
   scope: ['email', 'profile'],
 
 }));
@@ -38,14 +38,14 @@ app.use(express.static('build'));
 
 app.use(cors({
   origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'PATCH'],
+  methods:['GET', 'POST', 'PUT', 'PATCH'],
   credentials: true,
 }));
-app.use('/googleauth',authRouter)
+app.use('/auth',authRouter)
 app.use(express.json());
 const users = {};
 
-app.use("/auth",adminRouter);
+app.use("/adminauth",adminRouter);
 
 app.use(cookieParser());
 
@@ -70,7 +70,7 @@ io.on('connection', (socket) => {
   });
 });
 app.use('/chat',empauth,chatapp(io))
-httpServer.listen(4000, async (req, res) => {
+httpServer.listen(8000, async (req, res) => {
   try {
     connection.connect((error) => {
       if (error) {
@@ -78,7 +78,9 @@ httpServer.listen(4000, async (req, res) => {
       } else {
         console.log('Connected to the database');
       }
-      console.log('Server is running on port 4000');
+      //  passportSetup.initialize(); // Initialize Passport
+      //   passportSetup.session(); // Enable session support
+      console.log('Server is running on port 8000');
     });
   } catch (error) {
     console.log('Something went wrong:', error);
