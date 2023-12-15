@@ -47,7 +47,7 @@ adminRouter.post("/adminlogin", async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'Admin/Images'); // Set your destination folder
+    cb(null, 'Admin/Image'); // Set your destination folder
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -59,8 +59,8 @@ const upload = multer({ storage: storage });
 
 
 adminRouter.post("/adminsignup",upload.single("image"), async (req, res) => {
-  const {name, email, password } = req.body;
-// console.log(req.file.filename,"filenmae")
+  const {name, email, password,image } = req.body;
+ 
   // Check if the user is already registered
   const query = `SELECT email FROM admin WHERE email='${email}'`;
   const [singledata] = await connection.promise().query(query);
@@ -70,43 +70,53 @@ adminRouter.post("/adminsignup",upload.single("image"), async (req, res) => {
     res.status(400).json({ msg: "Already Registered" });
   } else {
     try{
-        console.log(req.file.filename,"filename",)
+        // console.log(req.file.filename,"filename")
+
   bcrypt.hash(password, 5, async (err, hash) => {
       if (hash) {
         try {
-            await connection.promise().beginTransaction()
+
+         await connection.promise().beginTransaction()
           // Insert new user data into the database
+
           let query=""
-        
-         if(req.file.filename){
+        // console.log(req.file.filename,)
+         if(req.file!==undefined&&req.file.filename){
 query = `INSERT INTO admin (email,password,image,name) VALUES ('${email}','${hash}','${req.file.filename}','${name}')`;
          }
+
          else{
 
          query = `INSERT INTO admin (email,password,name) VALUES ('${email}','${hash}','${name}')`;}
-          connection.query(query, (async(error) => {
+       
+        
+         connection.query(query, (async(error) => {
             if (error) {
                 await connection.promise().rollback()
                 // console.log(error,"error")
               res.status(400).json({ msg: "Error In Signup" });
+
             } else {
+
                 await connection.promise().commit()
               res.status(200).json({ msg: "Signup Successfully" });
             }
           }));
         } catch (err) {
  await connection.promise().rollback()
-//  console.log(err)
-          res.status(500).json({ msg: "Error In Signup" });
+ 
+      res.status(500).json({ msg: "Error In Signup" });
         }
       }
     });
     }catch(err){
       await connection.promise().rollback()
+      // console.log(err)
         res.status(500).json({msg:"Server Error Is Going"})
     }
   
   }
 });
+
 
 module.exports = { adminRouter };

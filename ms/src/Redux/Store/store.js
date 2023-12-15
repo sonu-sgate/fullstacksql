@@ -20,6 +20,9 @@ import { getadmindatareducer } from "../Admin/GetAdmins/Reducer";
 import { usersignoutreducer } from "../Authenticaton/Employee/Attendence/SignOut/Reducer";
 import { getattendreducer } from "../Authenticaton/Employee/Attendence/Get/Reducer";
 import { adminsideattenddatareducer } from "../Admin/GetAttendence/Reducer";
+import { editadminreducer } from "../Admin/EditAdminProf/Reducer";
 const rootreducers=combineReducers({adminloginreducer,adminsignupreducer,getattendreducer,addcatreducer,getcatreducer,
- reportreducer,getempsidereducer,getadmindatareducer,usersignoutreducer,getattendreducer,adminsideattenddatareducer , addempreducer,getempreducer,getsingleempreducer,getcountreducer,amdinlogoutreducer,emploginreducer,empprofilereducer})
-export const store=legacy_createStore(rootreducers,applyMiddleware(thunk))
+ reportreducer,getempsidereducer,getadmindatareducer,usersignoutreducer,getattendreducer,adminsideattenddatareducer ,
+  addempreducer,getempreducer,getsingleempreducer,getcountreducer,amdinlogoutreducer,emploginreducer,
+  empprofilereducer,editadminreducer})
+export const store=legacy_createStore(rootreducers,applyMiddleware(thunk)) 

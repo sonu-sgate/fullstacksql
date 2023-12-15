@@ -6,7 +6,42 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const { error } = require('console');
 const adminactivityRouter = express.Router();
+// Route to get singleadmin
 
+adminactivityRouter.get('/getadmin/:id',async(req,res)=>{
+const {id}=req.params
+
+try{
+const [data]=await connection.promise().query(`SELECT * FROM amdin WHERE id=${id}`)
+res.status(200).json({msg:data})
+}catch(err){
+ res.status(500).json({msg:"Something going Wrong"})
+}
+})
+
+// Edit admin Profile Route
+adminactivityRouter.patch('/editadmin/:id',async(req,res)=>{
+  const {id}=req.params
+  const {name,email}=req.body
+  try{
+    await connection.promise().beginTransaction()
+connection.query(`UPDATE admin SET ${name&&"name"} ${req.file.filename!==undefined&&", image"},${email&&", eamil"} `,[
+  name&&name,email&&email,req.file.file!==undefined&&req.file.filename
+],async(error,results)=>{
+  if(error){
+    await connection.promise.rollback()
+    res.status(400).json({msg:"Not able to update"})
+  }else{
+    await connection.promise().commit()
+    res.status(200).json({msg:"Updated Successfully"})
+  }
+})
+  }catch(err){
+    await connection.promise().rollback()
+    res.status(500).json({msg:"Something Going Wrong"})
+  }
+  
+})
 // Route to add a new category
 adminactivityRouter.post('/addcat', async (req, res) => {
   const { name } = req.body;

@@ -41,6 +41,7 @@ const AdminTable = ({ data }) => {
           <Tr bgColor="gray.100">
             <Th color="gray.700">Admin ID</Th>
             {/* <Th>Name</Th> */}
+            <Th color="gray.700">Pic </Th>
             <Th color="gray.700">Email</Th>
             <Th>Action</Th>
           </Tr>
@@ -56,9 +57,16 @@ const AdminTable = ({ data }) => {
               }}
             >
               <Td>{admin.id}</Td>
+              <Td>
+               
+                <Avatar src={`${api}/Image/` + admin.image} />
+              </Td>
               {/* <Td>{admin.name}</Td> */}
               <Td>{admin.email}</Td>
-          <Td>MORE</Td>
+
+              <Td>
+                <EditIcon>Edit</EditIcon>
+              </Td>
             </MotionBox>
           ))}
         </Tbody>

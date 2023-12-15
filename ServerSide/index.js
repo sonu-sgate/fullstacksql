@@ -36,6 +36,7 @@ const io = new Server(httpServer, {
 
 app.use(express.static('build'));
 
+
 app.use(cors({
   origin: 'http://localhost:5173',
   methods:['GET', 'POST', 'PUT', 'PATCH'],
@@ -50,6 +51,7 @@ app.use("/adminauth",adminRouter);
 app.use(cookieParser());
 
 app.use(express.static('Public'));
+app.use("/Image", express.static("Admin/Image"));
 
 app.use("/adminside",auth,adminactivityRouter);
 app.use("/empside",empRouter);
