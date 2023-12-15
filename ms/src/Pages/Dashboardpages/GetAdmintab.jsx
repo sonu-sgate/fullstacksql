@@ -11,6 +11,7 @@ import {
   Box,
   Tooltip,
   Avatar,
+
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -18,6 +19,7 @@ import CatDeletedialoge from "./Catdeletemodel";
 import { Link, useLocation } from "react-router-dom";
 import { api } from "../../Redux/Api/api";
 import Adminpagination from "./adminpagination/AdminPagi";
+import EditAdminModel from "./EditAdminModel";
 
 const MotionBox = chakra(motion.div);
 
@@ -65,7 +67,7 @@ const AdminTable = ({ data }) => {
               <Td>{admin.email}</Td>
 
               <Td>
-                <EditIcon>Edit</EditIcon>
+            <EditAdminModel id={admin.id} name={admin.name} email={admin.email} image={admin.image}/>
               </Td>
             </MotionBox>
           ))}
