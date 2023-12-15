@@ -45,6 +45,7 @@ const tableData = [
 const Home = () => {
   const dispatch=useDispatch()
    const [searchparams, setSearchParams] = useSearchParams();
+   const [refresh,setRefresh]=useState(false)
   const [currentPage,setCurrentPage]=useState(searchparams.get("page")||1)
   
   const location=useLocation()
@@ -69,12 +70,15 @@ const params={
 searchparams.get("email")&&(params.email=searchparams.get("email"))
 searchparams.get('page')&&(params.page=searchparams.get('page'))
 dispatch(getadmindata(params))
-  },[location.search])
+  },[location.search,refresh])
   const tableHeaders = useBreakpointValue({
     base: ['Name', 'Email', 'Role'],
     sm: ['Name', 'Email', 'Role', 'Actions'],
   });
 // console.log("admins",admins)
+const handlerefresh=()=>{
+  setRefresh(!refresh)
+}
   return (
     <>
       <Heading textAlign="center" my={8}>
@@ -86,7 +90,7 @@ dispatch(getadmindata(params))
           <AddIcon />
         </Button>
       </Link> */}
-<InitialFocus/>
+<InitialFocus handlerefresh={handlerefresh}/>
       <Box
         display="grid"
         gridTemplateColumns="repeat(3,1fr)"

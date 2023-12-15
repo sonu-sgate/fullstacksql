@@ -48,8 +48,9 @@ const handlesubmit=(e)=>{
     const {name}=editdata
     let newdata=new FormData()
     newdata.append('name',name)
-    editImage&&newdata.append("image")
+    editImage&&newdata.append("image",image)
     dispatch(editadmin(id,editdata)).then((res)=>{
+      // console.log(res,"updating res")
         dispatch(editadminsuccess())
         toast({
             description:res.data.msg,

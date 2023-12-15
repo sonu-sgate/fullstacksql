@@ -31,7 +31,7 @@ const initialData = {
   password: "",
 };
 
-export default function SignUp() {
+export default function SignUp({handlerefresh}) {
   const [showPassword, setShowPassword] = useState(false);
   const [signupdata, setSignupdata] = useState(initialData);
   const [image,setImage]=useState("")
@@ -84,8 +84,9 @@ image&&newdata.append("image",image)
           status: "success",
           duration: 3000,
         });
-  // onClose()
+  onClose()
     setSignupdata(initialData)
+    handlerefresh()
         // navigate("/adminlogin");
       })
       .catch((error) => {

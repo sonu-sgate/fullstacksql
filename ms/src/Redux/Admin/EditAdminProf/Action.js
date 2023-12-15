@@ -12,6 +12,8 @@ export const editadminsuccess=(payload)=>{
 export const editadminfailure=()=>{
     return {type:editadminfail}
 }
+
+
 export const editadmin=(id,obj)=>(dispatch)=>{
     // console.log(obj,id,"id,obj")
     dispatch(editadminrequest())

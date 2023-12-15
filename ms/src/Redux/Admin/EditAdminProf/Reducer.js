@@ -3,7 +3,7 @@ import { editadminreq, editadminsucc } from "./ActionTypes"
 const initialdata={
     editadminisLoading:false,
     editadminisError:false,
-    data:[]
+   
 }
 
 export const editadminreducer=(state=initialdata,action)=>{
@@ -11,13 +11,13 @@ export const editadminreducer=(state=initialdata,action)=>{
 
     switch(type){
         case editadminreq:{
-            return {...state,editadminisLoading:true,editadminisError:false,data:[]}
+            return {...state,editadminisLoading:true,editadminisError:false}
         }
         case editadminsucc:{
-            return {...state,editadminisLoading:false,editadminisError:false,data:payload.msg}
+            return {...state,editadminisLoading:false,editadminisError:false}
         }
         case editadminsucc:{
-            return {...state,editadminisLoading:false,editadminisError:true,data:[]}
+            return {...state,editadminisLoading:false,editadminisError:true}
         }
         default:{
             return state
