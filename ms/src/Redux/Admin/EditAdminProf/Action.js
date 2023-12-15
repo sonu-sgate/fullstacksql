@@ -13,10 +13,7 @@ export const editadminfailure=()=>{
     return {type:editadminfail}
 }
 export const editadmin=(id,obj)=>(dispatch)=>{
+    // console.log(obj,id,"id,obj")
     dispatch(editadminrequest())
-    axios.patch(`${api}/adminside/${id}`,obj).then((res)=>{
-        dispatch(editadminsuccess(res.data))
-    }).catch((err)=>{
-        dispatch(editadminfailure())
-    })
+    return axios.patch(`${api}/adminside/editadmin/${id}`,obj)
 }

@@ -5,7 +5,20 @@ const { adminRouter } = require('./Amdinroutes');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const { error } = require('console');
+const fs=require('fs');
+
 const adminactivityRouter = express.Router();
+// Image upload configuration using multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'Public/Images'); // Set your destination folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
 // Route to get singleadmin
 
 adminactivityRouter.get('/getadmin/:id',async(req,res)=>{
@@ -20,27 +33,77 @@ res.status(200).json({msg:data})
 })
 
 // Edit admin Profile Route
-adminactivityRouter.patch('/editadmin/:id',async(req,res)=>{
+adminactivityRouter.patch('/editadmin/:id',upload.single("image"),async(req,res)=>{
   const {id}=req.params
   const {name,email}=req.body
-  try{
-    await connection.promise().beginTransaction()
-connection.query(`UPDATE admin SET ${name&&"name"} ${req.file.filename!==undefined&&", image"},${email&&", eamil"} `,[
-  name&&name,email&&email,req.file.file!==undefined&&req.file.filename
-],async(error,results)=>{
-  if(error){
-    await connection.promise.rollback()
-    res.status(400).json({msg:"Not able to update"})
+  const [existingdata]=await connection.promise().query(`SELECT * FROM admin WHERE id=${id}`)
+  if(existingdata){
+let existingimage=existingdata[0].image
+if(existingimage){
+fs.unlink(`Admin/Image/${existingimage}`,async(err)=>{
+  if(err){
+       console.log(error);
+    console.log("Not able to update profile")
   }else{
-    await connection.promise().commit()
-    res.status(200).json({msg:"Updated Successfully"})
+    console.log("profile is Removed")
+    try {
+     await connection.promise().beginTransaction();
+     connection.query(
+       `UPDATE admin SET ${name && "name"} ${
+         req.file!==undefined&&req.file.filename  && ", image"
+       } `,
+       [
+         name && name,
+        
+         req.file.file !== undefined && req.file.filename,
+       ],
+       async (error, results) => {
+         if (error) {
+          console.log(error)
+           await connection.promise.rollback();
+           res.status(400).json({ msg: "Not able to update" });
+         } else {
+           await connection.promise().commit();
+           res.status(200).json({ msg: "Updated Successfully" });
+         }
+       }
+     );
+   } catch (err) {
+     await connection.promise().rollback();
+     res.status(500).json({ msg: "Something Going Wrong" });
+   }
   }
 })
-  }catch(err){
-    await connection.promise().rollback()
-    res.status(500).json({msg:"Something Going Wrong"})
-  }
+}else{
+   try {
+     await connection.promise().beginTransaction();
+     connection.query(
+       `UPDATE admin SET ${name && "name"} ${
+         req.file!==undefined&&req.file.filename  && ", image"
+       } `,
+       [
+         name && name,
+        
+         req.file.file !== undefined && req.file.filename,
+       ],
+       async (error, results) => {
+         if (error) {
+           await connection.promise.rollback();
+           res.status(400).json({ msg: "Not able to update" });
+         } else {
+           await connection.promise().commit();
+           res.status(200).json({ msg: "Updated Successfully" });
+         }
+       }
+     );
+   } catch (err) {
+     await connection.promise().rollback();
+     res.status(500).json({ msg: "Something Going Wrong" });
+   }
   
+}
+  }
+ 
 })
 // Route to add a new category
 adminactivityRouter.post('/addcat', async (req, res) => {
@@ -76,17 +139,7 @@ adminactivityRouter.get('/getcat', async (req, res) => {
   }
 });
 
-// Image upload configuration using multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'Public/Images'); // Set your destination folder
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  },
-});
 
-const upload = multer({ storage: storage });
 
 // Route to add a new employee with image upload
 adminactivityRouter.post('/addemployee', upload.single('image'), async (req, res) => {
